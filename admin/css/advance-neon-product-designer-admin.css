@@ -131,3 +131,20 @@ table.widefat,table.repeatable-fields-table{
   width: 100px;
     max-width: 100px
 }
+.anpd-table th{
+  padding: 10px 5px;
+  background: #1d23272b;
+  font-weight: 500;
+  border-radius: 5px;
+  border: 1px solid #b9bbbd;
+  text-transform: uppercase;
+}
+.anpd-table tbody:before {
+    content:"@";
+    display:block;
+    line-height:10px;
+    text-indent:-99999px;
+}
+.button.remove-row{
+  width: 100%;
+}

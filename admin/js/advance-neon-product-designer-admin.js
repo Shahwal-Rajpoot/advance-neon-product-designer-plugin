@@ -3,10 +3,10 @@
 
 	var $ = jQuery;
 	jQuery(document).ready(function( $ ){
-		$( '#add-row' ).on('click', function() {
-			var row = $( '.empty-row.custom-repeter-text' ).clone(true);
+		$( '.add-row' ).on('click', function() {
+			var row = $(this).parents('.inside').find( '.empty-row.custom-repeter-text' ).clone(true);
 			row.removeClass( 'empty-row custom-repeter-text' ).css('display','table-row');
-			row.insertBefore( '#repeatable-fieldset-one tbody>tr:last' );
+			row.insertBefore( $(this).parents('.inside').find('.anpd-table tbody>tr:last') );
 			return false;
 		});
 
@@ -15,7 +15,7 @@
 			return false;
 		});
 
-
+		// update input value from colors input
 		jQuery(".getColor").on("change", function(){
 			//Get Color
 			var color = jQuery(this).val();
@@ -23,7 +23,8 @@
 			//Show color code
 			jQuery(this).siblings(".outputcolor").val(color);
 		})
-
+		
+		// update input color value from input
 		jQuery(".outputcolor").on("focusout", function(){
 			//Get Color
 			var color = jQuery(this).val();

@@ -197,125 +197,79 @@ class ANPD_Admin {
 	 * Register the anpd postype.
 	 */
 	public function Rigister_cpt_ANPD(){
-
-			$labels = array(
-				'name' => _x( 'Configurator', 'Post Type General Name', 'advance-neon-product-designer' ),
-				'singular_name' => _x( 'Configurator ', 'Post Type Singular Name', 'advance-neon-product-designer' ),
-				'menu_name' => _x( 'APDS', 'Admin Menu text', 'advance-neon-product-designer' ),
-				'name_admin_bar' => _x( 'Configurator ', 'Add New on Toolbar', 'advance-neon-product-designer' ),
-				'archives' => __( 'Configurator  Archives', 'advance-neon-product-designer' ),
-				'attributes' => __( 'Configurator  Attributes', 'advance-neon-product-designer' ),
-				'parent_item_colon' => __( 'Parent Configurator :', 'advance-neon-product-designer' ),
-				'all_items' => __( 'All APDS', 'advance-neon-product-designer' ),
-				'add_new_item' => __( 'Add New Configurator ', 'advance-neon-product-designer' ),
-				'add_new' => __( 'Add New Configurator', 'advance-neon-product-designer' ),
-				'new_item' => __( 'New Configurator ', 'advance-neon-product-designer' ),
-				'edit_item' => __( 'Edit Configurator ', 'advance-neon-product-designer' ),
-				'update_item' => __( 'Update Configurator ', 'advance-neon-product-designer' ),
-				'view_item' => __( 'View Configurator ', 'advance-neon-product-designer' ),
-				'view_items' => __( 'View Configurator', 'advance-neon-product-designer' ),
-				'search_items' => __( 'Search Configurator ', 'advance-neon-product-designer' ),
-				'not_found' => __( 'Not found', 'advance-neon-product-designer' ),
-				'not_found_in_trash' => __( 'Not found in Trash', 'advance-neon-product-designer' ),
-				'featured_image' => __( 'Featured Image', 'advance-neon-product-designer' ),
-				'set_featured_image' => __( 'Set featured image', 'advance-neon-product-designer' ),
-				'remove_featured_image' => __( 'Remove featured image', 'advance-neon-product-designer' ),
-				'use_featured_image' => __( 'Use as featured image', 'advance-neon-product-designer' ),
-				'insert_into_item' => __( 'Insert into Configurator ', 'advance-neon-product-designer' ),
-				'uploaded_to_this_item' => __( 'Uploaded to this Configurator ', 'advance-neon-product-designer' ),
-				'items_list' => __( 'APDS list', 'advance-neon-product-designer' ),
-				'items_list_navigation' => __( 'APDS list navigation', 'advance-neon-product-designer' ),
-				'filter_items_list' => __( 'Filter APDS list', 'advance-neon-product-designer' ),
-			);
-			$args = array(
-				'label' => __( 'Configurator ', 'advance-neon-product-designer' ),
-				'description' => __( 'Advance Neon Product Designer By Qwerty Experts', 'advance-neon-product-designer' ),
-				'labels' => $labels,
-				'menu_icon' => '',
-				'supports' => array('title'),
-				'taxonomies' => array(),
-				'public' => false,
-				'show_ui' => true,
-				'show_in_menu' => false,
-				'menu_position' => 5,
-				'show_in_admin_bar' => false,
-				'show_in_nav_menus' => false,
-				'can_export' => true,
-				'has_archive' => false,
-				'hierarchical' => false,
-				'exclude_from_search' => true,
-				'show_in_rest' => false,
-				'publicly_queryable' => false,
-				'capability_type' => 'post',
-			);
-			register_post_type( 'anpd-configurator', $args );
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/partials/cpt-product-design.php';
 	}
 
 
-	// Add colors Meta Box to post
-	public function anpd_colors_rapater_meta_boxes() {
+	// Add Meta Box to post
+	public function anpd_add_repeter_meta_boxes($id,$title,$callback) {
 		$screens = array( 'anpd-configurator' );
-
 		foreach ( $screens as $screen ) {
-
 			add_meta_box(
-				'anpd-colors-repeter-data',
-				__( 'ANPD Colors', 'neon-product-designer' ),
-				array( $this, 'anpd_colors_meta_box_callback' ),
+				$id,
+				__( $title, 'neon-product-designer' ),
+				array( $this, $callback ),
 				$screen
 			);
 		}
 	}
 
+
+	//Add backing meta box to post
+	public function anpd_backing_repeter_meta_boxes(){
+		$this->anpd_add_repeter_meta_boxes('anpd-backing-repeter-data','ANPD Backing','anpd_backing_meta_box_callback');
+	}
+
+
+	//meta box callback function for backing
+	public function anpd_backing_meta_box_callback($post) {
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/partials/product-backing-option.php';
+	}
+
+	// Save backing Meta Box values
+	public function anpd_backing_meta_box_save($post_id) {
+		global $post;
+		if (!isset($_POST['anpd-backings']) || !wp_verify_nonce($_POST['anpd-backings'], 'repeterBox-backings'))
+			return;
+
+		if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE)
+			return;
+
+		if (!current_user_can('edit_post', $post_id))
+			return;
+
+		$old = get_post_meta($post_id, 'anpd_backing_group', true);
+
+		$new = array();
+		$titles = $_POST['backing_title'];
+		$price = $_POST['backing_price'];
+		$count = count( $titles );
+		for ( $i = 0; $i < $count; $i++ ) {
+			if ( $titles[$i] != '' ) {
+				$new[$i]['backing_title'] = stripslashes( strip_tags( $titles[$i] ) );
+				$new[$i]['backing_price'] = stripslashes( $price[$i] );
+			}
+		}
+
+		if ( !empty( $new ) && $new != $old ){
+			update_post_meta( $post_id, 'anpd_backing_group', $new );
+		} elseif ( empty($new) && $old ) {
+			delete_post_meta( $post_id, 'anpd_backing_group', $old );
+		}
+		$anpd_backing= $_REQUEST['anpd_backing'];
+		update_post_meta( $post_id, 'anpd_backing', $anpd_backing );
+	}
+
+
+	//Add colors meta box to post
+	public function anpd_colors_repeter_meta_boxes(){
+		$this->anpd_add_repeter_meta_boxes('anpd-colors-repeter-data','ANPD Colors','anpd_colors_meta_box_callback');
+	}
+
+
 	//meta box callback function for colors
 	public function anpd_colors_meta_box_callback($post) {
-		global $post;
-		$anpd_color_group = get_post_meta($post->ID, 'anpd_color_group', true);
-		wp_nonce_field( 'repeterBox-colors', 'anpd-colors' );
-		?>
-		<table class="anpd-table" id="repeatable-fieldset-one" width="100%">
-			<thead>
-				<tr>
-					<th>Title</th>
-					<th>Color</th>
-					<th>Color Price</th>
-					<th>Remove</th>
-				</tr>
-			</thead>
-			<tbody>
-				<?php
-				if ( $anpd_color_group ) :
-					foreach ( $anpd_color_group as $field ) {
-						?>
-						<tr>
-							<td><input type="text"  style="width:98%;" name="title[]" value="<?php if($field['title'] != '') echo esc_attr( $field['title'] ); ?>" placeholder="Title" /></td>
-							<td><input class="getColor" type="color"  style="width:15%;" name="getcolor[]" value="<?php if ($field['getcolor'] != '') echo esc_attr( $field['getcolor'] ); ?>" /><input type="text" name="outputcolor[]" class="outputcolor" style="width:82%;" value="<?php if ($field['outputcolor'] != '') echo esc_attr( $field['outputcolor'] ); ?>"></td>
-							<td><input type="number" style="width:98%;" name="price[]" value="<?php if ($field['price'] != '') echo esc_attr( $field['price'] ); ?>" placeholder="Price"/></td>
-							<td style="text-align: center;"><a class="button remove-row" href="#1">Remove</a></td>
-						</tr>
-						<?php
-					}
-				else :
-					?>
-					<tr>
-						<td><input type="text" style="width:98%;" name="title[]" placeholder="Title"/></td>
-						<td><input class="getColor" type="color"  style="width:15%;" name="getcolor[]" /><input type="text" name="outputcolor[]" class="outputcolor" style="width:82%;"></td>
-						<td><input type="number" style="width:98%;" name="price[]" placeholder="Price"/></td>
-						<td style="text-align: center;"><a class="button  cmb-remove-row-button button-disabled" href="#">Remove</a></td>
-					</tr>
-				<?php endif; ?>
-				<tr class="empty-row custom-repeter-text" style="display: none">
-					<td><input type="text" style="width:98%;" name="title[]" placeholder="Title"/></td>
-					<td><input class="getColor" type="color" style="width:15%;" name="getcolor[]" /><input type="text" name="outputcolor[]" class="outputcolor" style="width:82%;"></td>
-					<td><input type="number" style="width:98%;" name="price[]" placeholder="Price"/></td>
-					<td style="text-align: center;"><a class="button remove-row" href="#">Remove</a></td>
-				</tr>
-				
-			</tbody>
-		</table>
-		<p><a id="add-row" class="button" href="#">Add another</a></p>
-	
-		<?php
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/partials/product-colors-option.php';
 	}
 
 	// Save colors Meta Box values

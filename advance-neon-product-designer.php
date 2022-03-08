@@ -45,7 +45,7 @@ function activate_ANPD() {
 	require_once plugin_dir_path( __FILE__ ) . 'includes/class-advance-neon-product-designer-activator.php';
 	ANPD_Activator::activate();
 }
-
+        
 /**
  * The code that runs during plugin deactivation.
  * This action is documented in includes/class-advance-neon-product-designer-deactivator.php
@@ -57,9 +57,6 @@ function deactivate_ANPD() {
 
 register_activation_hook( __FILE__, 'activate_ANPD' );
 register_deactivation_hook( __FILE__, 'deactivate_ANPD' );
-if ( ! function_exists( 'vc_admin_fields' ) ) {
-	require_once plugin_dir_path( __FILE__ ) . 'includes/vc-admin-utils.php';
-}
 /**
  * The core plugin class that is used to define internationalization,
  * admin-specific hooks, and public-facing site hooks.

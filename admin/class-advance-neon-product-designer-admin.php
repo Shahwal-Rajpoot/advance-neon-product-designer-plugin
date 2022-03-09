@@ -153,13 +153,13 @@ class ANPD_Admin {
 			
 		);
 
-		// wp_enqueue_script(
-		// 	'select2-js',
-		// 	plugin_dir_url( __FILE__ ) . 'js/select2.min.js',
-		// 	array( 'jquery' ),
-		// 	$this->version,
-		// 	'all'
-		// );
+		wp_enqueue_script(
+			'select2-js',
+			plugin_dir_url( __FILE__ ) . 'js/select2.min.js',
+			array( 'jquery' ),
+			$this->version,
+			'all'
+		);
 
 	}
 	/**
@@ -212,6 +212,98 @@ class ANPD_Admin {
 				$screen
 			);
 		}
+	}
+
+	//Add font meta box to post
+	public function anpd_font_repeter_meta_boxes(){
+		$this->anpd_add_repeter_meta_boxes('anpd-font-repeter-data','ANPD Font','anpd_font_meta_box_callback');
+	}
+
+
+	//meta box callback function for font
+	public function anpd_font_meta_box_callback($post) {
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/partials/product-font-option.php';
+	}
+
+
+	// Save font Meta Box values
+	public function anpd_font_meta_box_save($post_id) {
+		global $post;
+		if (!isset($_POST['anpd-fonts']) || !wp_verify_nonce($_POST['anpd-fonts'], 'repeterBox-fonts'))
+			return;
+
+		if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE)
+			return;
+
+		if (!current_user_can('edit_post', $post_id))
+			return;
+
+		$old = get_post_meta($post_id, 'anpd_font_group', true);
+
+		$new = array();
+		$titles = $_POST['font'];
+		$price = $_POST['font_price'];
+		$count = count( $titles );
+		for ( $i = 0; $i < $count; $i++ ) {
+			if ( $titles[$i] != '' ) {
+				$new[$i]['font'] = stripslashes( strip_tags( $titles[$i] ) );
+				$new[$i]['font_price'] = stripslashes( $price[$i] );
+			}
+		}
+
+		if ( !empty( $new ) && $new != $old ){
+			update_post_meta( $post_id, 'anpd_font_group', $new );
+		} elseif ( empty($new) && $old ) {
+			delete_post_meta( $post_id, 'anpd_font_group', $old );
+		}
+		$anpd_font= $_REQUEST['anpd_font'];
+		update_post_meta( $post_id, 'anpd_font', $anpd_font );
+	}
+
+
+	//Add size meta box to post
+	public function anpd_size_repeter_meta_boxes(){
+		$this->anpd_add_repeter_meta_boxes('anpd-size-repeter-data','ANPD Size','anpd_size_meta_box_callback');
+	}
+
+
+	//meta box callback function for size
+	public function anpd_size_meta_box_callback($post) {
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/partials/size-product-option.php';
+	}
+
+	// Save size Meta Box values
+	public function anpd_size_meta_box_save($post_id) {
+		global $post;
+		if (!isset($_POST['anpd-sizes']) || !wp_verify_nonce($_POST['anpd-sizes'], 'repeterBox-sizes'))
+			return;
+
+		if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE)
+			return;
+
+		if (!current_user_can('edit_post', $post_id))
+			return;
+
+		$old = get_post_meta($post_id, 'anpd_size_group', true);
+
+		$new = array();
+		$titles = $_POST['size_title'];
+		$price = $_POST['size_price'];
+		$count = count( $titles );
+		for ( $i = 0; $i < $count; $i++ ) {
+			if ( $titles[$i] != '' ) {
+				$new[$i]['size_title'] = stripslashes( strip_tags( $titles[$i] ) );
+				$new[$i]['size_price'] = stripslashes( $price[$i] );
+			}
+		}
+
+		if ( !empty( $new ) && $new != $old ){
+			update_post_meta( $post_id, 'anpd_size_group', $new );
+		} elseif ( empty($new) && $old ) {
+			delete_post_meta( $post_id, 'anpd_size_group', $old );
+		}
+		$anpd_size= $_REQUEST['anpd_size'];
+		update_post_meta( $post_id, 'anpd_size', $anpd_size );
 	}
 
 

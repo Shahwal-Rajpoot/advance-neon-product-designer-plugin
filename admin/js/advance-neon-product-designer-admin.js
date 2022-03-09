@@ -7,6 +7,8 @@
 			var row = $(this).parents('.inside').find( '.empty-row.custom-repeter-text' ).clone(true);
 			row.removeClass( 'empty-row custom-repeter-text' ).css('display','table-row');
 			row.insertBefore( $(this).parents('.inside').find('.anpd-table tbody>tr:last') );
+			row.find(".font-options").addClass('anpd-font-select').select2({});
+			row.find(".anpd-font-select").removeClass('font-options');
 			return false;
 		});
 
@@ -32,6 +34,8 @@
 			//Show color code
 			jQuery(this).siblings(".getColor").val(color);
 		})
+
+		$(":not(.empty-row) .anpd-font-select").select2({});
 	});
 
 	

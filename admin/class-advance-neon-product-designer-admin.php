@@ -96,7 +96,7 @@ class ANPD_Admin {
 		 * between the defined hooks and the functions defined in this
 		 * class.
 		 */
-
+		wp_enqueue_media();
 		wp_enqueue_script(
 			'iris',
 			admin_url( 'js/iris.min.js' ),
@@ -212,6 +212,52 @@ class ANPD_Admin {
 				$screen
 			);
 		}
+	}
+
+	//Add location meta box to post
+	public function anpd_location_repeter_meta_boxes(){
+		$this->anpd_add_repeter_meta_boxes('anpd-location-repeter-data','ANPD Locations','anpd_location_meta_box_callback');
+	}
+
+	//meta box callback function for location
+	public function anpd_location_meta_box_callback($post) {
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/partials/product-locations-option.php';
+	}
+
+	// Save location Meta Box values
+	public function anpd_location_meta_box_save($post_id) {
+		global $post;
+		if (!isset($_POST['anpd-locations']) || !wp_verify_nonce($_POST['anpd-locations'], 'repeterBox-locations'))
+			return;
+
+		if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE)
+			return;
+
+		if (!current_user_can('edit_post', $post_id))
+			return;
+
+		$old = get_post_meta($post_id, 'anpd_location_group', true);
+
+		$new = array();
+		$titles = $_POST['location_title'];
+		$media = $_POST['locations_img'];
+		$price = $_POST['location_price'];
+		$count = count( $media );
+		for ( $i = 0; $i < $count; $i++ ) {
+			if ( $titles[$i] != '' ) {
+				$new[$i]['location_title'] = stripslashes( strip_tags( $titles[$i] ) );
+				$new[$i]['location_price'] = stripslashes( $price[$i] );
+				$new[$i]['locations_img'] = stripslashes( $media[$i] );
+			}
+		}
+
+		if ( !empty( $new ) && $new != $old ){
+			update_post_meta( $post_id, 'anpd_location_group', $new );
+		} elseif ( empty($new) && $old ) {
+			delete_post_meta( $post_id, 'anpd_location_group', $old );
+		}
+		$anpd_location = $_REQUEST['anpd_location'];
+		update_post_meta( $post_id, 'anpd_location', $anpd_location );
 	}
 
 	//Add font meta box to post

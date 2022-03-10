@@ -44,4 +44,5 @@ wp_nonce_field( 'repeterBox-colors', 'anpd-colors' );
 		
 	</tbody>
 </table>
+<hr>
 <p><a id="add-row" class="button add-row" href="#">Add another</a></p>

@@ -6,6 +6,15 @@
  * All of the CSS for your admin-specific functionality should be
  * included in this file.
  */
+ .anpd-img{
+  width: 200px;
+ }
+ .anpd-img img{
+      max-width: 100%;
+    max-height: 80px;
+    width: 100%;
+    object-fit: cover;
+ }
 
  .font_style_table {
 	width: 100%;
@@ -147,4 +156,8 @@ table.widefat,table.repeatable-fields-table{
 }
 .button.remove-row{
   width: 100%;
+}
+.wc_multi_upload_image_button{
+  color: #fff!important;
+  background: #2271b1!important;
 }

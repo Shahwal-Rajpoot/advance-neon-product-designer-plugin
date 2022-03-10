@@ -23,7 +23,7 @@ if ( $test_url ) {
 
 function font_options($selected_font){
 	global $url_decode;
-	echo '<option>' . __( 'Pick a google font', 'anpd-neon-product-designer' ) . ' </option>';
+	echo '<option value="">' . __( 'Pick a google font', 'anpd-neon-product-designer' ) . ' </option>';
 	foreach ( $url_decode['items'] as $font ) {
 		if ( isset( $font['family'] ) && isset( $font['files'] ) && isset( $font['files']['regular'] ) ) {
 			$selected = '';
@@ -51,17 +51,7 @@ function font_options($selected_font){
 				<tr>
 					<td>
 						<?php 
-						// $parts = parse_url($field['font']);
-						// echo '<pre>';
-						// print_r($parts);
-						// parse_str($parts['query'], $query);
-						// // echo '<pre>';
-						// // print_r($query);
-						// echo $query['family'];
-							// echo $field['font'];
 							$font_selected = urldecode($field['font']);
-							// echo urldecode($field['font']);
-
 						?>
 						<select style="width:98%;" class="form-control anpd-font-select" name="font[]">
 
@@ -94,6 +84,7 @@ function font_options($selected_font){
 			<td>
 				<select style="width:98%;" class="form-control font-options" name="font[]">
 					<?php
+					$font_not_selected = '';
 						font_options($font_not_selected);
 					?>
 				</select>
@@ -104,4 +95,5 @@ function font_options($selected_font){
 		
 	</tbody>
 </table>
+<hr>
 <p><a id="add-row" class="button add-row" href="#">Add another</a></p>

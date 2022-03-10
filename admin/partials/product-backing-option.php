@@ -40,4 +40,5 @@ wp_nonce_field( 'repeterBox-backings', 'anpd-backings' );
 		
 	</tbody>
 </table>
+<hr>
 <p><a id="add-row" class="button add-row" href="#">Add another</a></p>

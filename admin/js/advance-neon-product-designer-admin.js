@@ -70,7 +70,7 @@
 		});
 
 		$('body').on('click', '.wc_multi_remove_image_button', function() {
-			// $(this).hide().prev().val('').prev().addClass('button').html('Add Media');
+			$(this).hide();
 			$(this).parent().find('.anpd-img').hide();
 			$(this).siblings('.attechments-ids').attr('value', '');
 			return false;

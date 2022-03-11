@@ -164,6 +164,8 @@ class ANPD_Admin {
 	}
 	/**
 	 * Builds all the plugin menu and submenu
+	 *
+	 * @since    1.0.0
 	 */
 	public function add_ANPD_parts_submenu() {
 		global $submenu;
@@ -193,38 +195,105 @@ class ANPD_Admin {
 			false,
 		);
 	}
+
 	/**
 	 * Register the anpd postype.
+	 *
+	 * @since    1.0.0
 	 */
 	public function Rigister_cpt_ANPD(){
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/partials/cpt-product-design.php';
 	}
 
+	/**
+	 * Configuration Selector from product admin page
+	 *
+	 * @since    1.0.0
+	 */
+	public function get_product_config_selector() {
+		global $post;
+		$value = get_post_meta( $post->ID, 'anpd_config_selector', true );
+    	if( empty( $value ) ) $value = '';
+		$args        = array(
+			'post_type' => 'anpd-configurator',
+			'nopaging'  => true,
+		);
+		$configs     = get_posts( $args );
+		$options[''] = __( 'Select a value', 'advance-neon-product-designer');
+		foreach ( $configs as $config ) {
+			$options[ $config->ID ] = $config->post_title;
+		}
 
-	// Add Meta Box to post
-	public function anpd_add_repeter_meta_boxes($id,$title,$callback) {
-		$screens = array( 'anpd-configurator' );
+		
+		echo '<div class="options_group">';
+
+	    woocommerce_wp_select( array(
+	        'id'      => 'anpd_config_selector',
+	        'label'   => __( 'Select your ANPD Configuration', 'advance-neon-product-designer' ),
+	        'options' =>  $options, //this is where I am having trouble
+	        'value'   => $value,
+	    ) );
+
+	    echo '</div>'; 
+		
+	}
+
+	/**
+	 * Save Configuration Selector from product admin page
+	 *
+	 * @since    1.0.0
+	 */
+	public function ANPD_woo_general_fields_save( $post_id ){
+		global $post;
+		// Select
+	    $woocommerce_select = $_POST['anpd_config_selector'];
+	    if( !empty( $woocommerce_select ) )
+	        update_post_meta( $post_id, 'anpd_config_selector', esc_attr( $woocommerce_select ) );
+	    else {
+	        update_post_meta( $post_id, 'anpd_config_selector',  '' );
+	    }
+	}
+
+	/**
+	 * Add Meta Box to post
+	 *
+	 * @since    1.0.0
+	 */
+	public function anpd_add_repeter_meta_boxes($post_type,$id,$title,$callback) {
+		$screens = array( $post_type );
 		foreach ( $screens as $screen ) {
 			add_meta_box(
 				$id,
-				__( $title, 'neon-product-designer' ),
+				__( $title, 'advance-neon-product-designer' ),
 				array( $this, $callback ),
 				$screen
 			);
 		}
 	}
 
-	//Add location meta box to post
+	/**
+	 * Add location meta box to post
+	 *
+	 * @since    1.0.0
+	 */
 	public function anpd_location_repeter_meta_boxes(){
-		$this->anpd_add_repeter_meta_boxes('anpd-location-repeter-data','ANPD Locations','anpd_location_meta_box_callback');
+		$this->anpd_add_repeter_meta_boxes('anpd-configurator','anpd-location-repeter-data','ANPD Locations','anpd_location_meta_box_callback');
 	}
 
-	//meta box callback function for location
+	/**
+	 * Meta box callback function for location
+	 *
+	 * @since    1.0.0
+	 */
 	public function anpd_location_meta_box_callback($post) {
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/partials/product-locations-option.php';
 	}
 
-	// Save location Meta Box values
+	/**
+	 * Save location Meta Box values
+	 *
+	 * @since    1.0.0
+	 */
 	public function anpd_location_meta_box_save($post_id) {
 		global $post;
 		if (!isset($_POST['anpd-locations']) || !wp_verify_nonce($_POST['anpd-locations'], 'repeterBox-locations'))
@@ -260,19 +329,29 @@ class ANPD_Admin {
 		update_post_meta( $post_id, 'anpd_location', $anpd_location );
 	}
 
-	//Add font meta box to post
+	/**
+	 * Add font meta box to post
+	 *
+	 * @since    1.0.0
+	 */
 	public function anpd_font_repeter_meta_boxes(){
-		$this->anpd_add_repeter_meta_boxes('anpd-font-repeter-data','ANPD Font','anpd_font_meta_box_callback');
+		$this->anpd_add_repeter_meta_boxes('anpd-configurator','anpd-font-repeter-data','ANPD Font','anpd_font_meta_box_callback');
 	}
 
-
-	//meta box callback function for font
+	/**
+	 * meta box callback function for font
+	 *
+	 * @since    1.0.0
+	 */
 	public function anpd_font_meta_box_callback($post) {
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/partials/product-font-option.php';
 	}
-
-
-	// Save font Meta Box values
+ 
+	/**
+	 * Save font Meta Box values
+	 *
+	 * @since    1.0.0
+	 */
 	public function anpd_font_meta_box_save($post_id) {
 		global $post;
 		if (!isset($_POST['anpd-fonts']) || !wp_verify_nonce($_POST['anpd-fonts'], 'repeterBox-fonts'))
@@ -306,19 +385,29 @@ class ANPD_Admin {
 		update_post_meta( $post_id, 'anpd_font', $anpd_font );
 	}
 
-
-	//Add size meta box to post
+	/**
+	 * Add size meta box to post
+	 *
+	 * @since    1.0.0
+	 */
 	public function anpd_size_repeter_meta_boxes(){
-		$this->anpd_add_repeter_meta_boxes('anpd-size-repeter-data','ANPD Size','anpd_size_meta_box_callback');
+		$this->anpd_add_repeter_meta_boxes('anpd-configurator','anpd-size-repeter-data','ANPD Size','anpd_size_meta_box_callback');
 	}
 
-
-	//meta box callback function for size
+	/**
+	 * meta box callback function for size
+	 *
+	 * @since    1.0.0
+	 */
 	public function anpd_size_meta_box_callback($post) {
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/partials/size-product-option.php';
 	}
 
-	// Save size Meta Box values
+	/**
+	 * Save size Meta Box values
+	 *
+	 * @since    1.0.0
+	 */
 	public function anpd_size_meta_box_save($post_id) {
 		global $post;
 		if (!isset($_POST['anpd-sizes']) || !wp_verify_nonce($_POST['anpd-sizes'], 'repeterBox-sizes'))
@@ -352,19 +441,29 @@ class ANPD_Admin {
 		update_post_meta( $post_id, 'anpd_size', $anpd_size );
 	}
 
-
-	//Add backing meta box to post
+	/**
+	 * Add backing meta box to post
+	 *
+	 * @since    1.0.0
+	 */
 	public function anpd_backing_repeter_meta_boxes(){
-		$this->anpd_add_repeter_meta_boxes('anpd-backing-repeter-data','ANPD Backing','anpd_backing_meta_box_callback');
+		$this->anpd_add_repeter_meta_boxes('anpd-configurator','anpd-backing-repeter-data','ANPD Backing','anpd_backing_meta_box_callback');
 	}
 
-
-	//meta box callback function for backing
+	/**
+	 * meta box callback function for backing
+	 *
+	 * @since    1.0.0
+	 */
 	public function anpd_backing_meta_box_callback($post) {
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/partials/product-backing-option.php';
 	}
 
-	// Save backing Meta Box values
+	/**
+	 * Save backing Meta Box values
+	 *
+	 * @since    1.0.0
+	 */
 	public function anpd_backing_meta_box_save($post_id) {
 		global $post;
 		if (!isset($_POST['anpd-backings']) || !wp_verify_nonce($_POST['anpd-backings'], 'repeterBox-backings'))
@@ -398,19 +497,29 @@ class ANPD_Admin {
 		update_post_meta( $post_id, 'anpd_backing', $anpd_backing );
 	}
 
-
-	//Add colors meta box to post
+	/**
+	 * Add colors meta box to post
+	 *
+	 * @since    1.0.0
+	 */
 	public function anpd_colors_repeter_meta_boxes(){
-		$this->anpd_add_repeter_meta_boxes('anpd-colors-repeter-data','ANPD Colors','anpd_colors_meta_box_callback');
+		$this->anpd_add_repeter_meta_boxes('anpd-configurator','anpd-colors-repeter-data','ANPD Colors','anpd_colors_meta_box_callback');
 	}
 
-
-	//meta box callback function for colors
+	/**
+	 * meta box callback function for colors
+	 *
+	 * @since    1.0.0
+	 */
 	public function anpd_colors_meta_box_callback($post) {
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/partials/product-colors-option.php';
 	}
 
-	// Save colors Meta Box values
+	/**
+	 * Save colors Meta Box values
+	 *
+	 * @since    1.0.0
+	 */
 	public function anpd_colors_meta_box_save($post_id) {
 		global $post;
 		if (!isset($_POST['anpd-colors']) || !wp_verify_nonce($_POST['anpd-colors'], 'repeterBox-colors'))

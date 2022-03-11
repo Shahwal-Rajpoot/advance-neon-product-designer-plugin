@@ -4,10 +4,10 @@ $anpd_location_group = get_post_meta($post->ID, 'anpd_location_group', true);
 wp_nonce_field( 'repeterBox-locations', 'anpd-locations' );
 ?>
 
-<table class="anpd-table" id="repeatable-fieldset-one" width="100%">
+<table class="anpd-table anpd-locations-table" id="repeatable-fieldset-one" width="100%">
 	<thead>
 		<tr>
-			<th>location Title</th>
+			<th>location Media</th>
 			<th>location</th>
 			<th>location Price</th>
 			<th>Remove</th>
@@ -24,8 +24,11 @@ wp_nonce_field( 'repeterBox-locations', 'anpd-locations' );
 							$image_attributes = wp_get_attachment_image_src($field['locations_img'], 'full');
 						?>
 						<div class="anpd-img">
-							<a href="<?php echo $image_attributes[0]; ?>" target="_blank"><img class="true_pre_image" src="<?php echo $image_attributes[0]; ?>" /></a>
+							<a href="<?php echo esc_attr($image_attributes[0]); ?>" target="_blank"><img class="true_pre_image" src="<?php echo esc_attr($image_attributes[0]); ?>" /></a>
+							
 						</div>
+						<a href="#" class="wc_multi_upload_image_button button">Update Media</a>
+						<input type="hidden" class="attechments-ids" name="locations_img[]" value="<?php echo esc_attr($field['locations_img']); ?>" />
 					</td>
 					<td>
 						<input type="text"  style="width:98%;" name="location_title[]" value="<?php if($field['location_title'] != '') echo esc_attr( $field['location_title'] ); ?>" placeholder="Title" />

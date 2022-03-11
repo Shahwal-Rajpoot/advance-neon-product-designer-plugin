@@ -156,8 +156,11 @@ class ANPD {
 
 		$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_styles' );
 		$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_scripts' );
+
 		$this->loader->add_action( 'admin_menu', $plugin_admin, 'add_ANPD_parts_submenu' );
+
 		$this->loader->add_action( 'init', $plugin_admin, 'Rigister_cpt_ANPD' );
+		
 		$this->loader->add_action( 'admin_init', $plugin_admin, 'anpd_colors_repeter_meta_boxes' );
 		$this->loader->add_action( 'save_post', $plugin_admin, 'anpd_colors_meta_box_save', 1 );
 
@@ -172,6 +175,8 @@ class ANPD {
 
 		$this->loader->add_action( 'admin_init', $plugin_admin, 'anpd_location_repeter_meta_boxes' );
 		$this->loader->add_action( 'save_post', $plugin_admin, 'anpd_location_meta_box_save', 1 );
+		$this->loader->add_action( 'woocommerce_product_options_general_product_data', $plugin_admin, 'get_product_config_selector' );
+		$this->loader->add_action( 'woocommerce_process_product_meta', $plugin_admin, 'ANPD_woo_general_fields_save' );
 
 	}
 

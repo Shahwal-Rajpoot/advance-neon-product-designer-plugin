@@ -8,9 +8,13 @@
  */
  .anpd-img{
   width: 200px;
+  margin: 0 auto;
+ }
+ .anpd-locations-table td{
+  text-align: center;
  }
  .anpd-img img{
-      max-width: 100%;
+      max-width: 100px;
     max-height: 80px;
     width: 100%;
     object-fit: cover;

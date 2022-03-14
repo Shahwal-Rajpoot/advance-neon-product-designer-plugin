@@ -60,7 +60,7 @@ function font_options($selected_font){
 							?>
 						</select>
 					</td>
-					<td><input type="number" style="width:98%;" name="font_price[]" value="<?php if ($field['font_price'] != '') echo esc_attr( $field['font_price'] ); ?>" placeholder="Price"/></td>
+					<td><input type="number" style="width:98%;" name="font_price[]" value="<?php if ($field['font_price'] != '') echo esc_attr( $field['font_price'] ); ?>" placeholder="Price" step="0.01"/></td>
 					<td style="text-align: center;"><a class="button remove-row" href="#1">Remove</a></td>
 				</tr>
 				<?php
@@ -76,7 +76,7 @@ function font_options($selected_font){
 						?>
 					</select>
 				</td>
-				<td><input type="number" style="width:98%;" name="font_price[]" placeholder="Price"/></td>
+				<td><input type="number" style="width:98%;" name="font_price[]" placeholder="Price" step="0.01"/></td>
 				<td style="text-align: center;"><a class="button  cmb-remove-row-button button-disabled" href="#">Remove</a></td>
 			</tr>
 		<?php endif; ?>
@@ -89,7 +89,7 @@ function font_options($selected_font){
 					?>
 				</select>
 			</td>
-			<td><input  type="number" style="width:98%;" name="font_price[]" placeholder="Price"/></td>
+			<td><input  type="number" style="width:98%;" name="font_price[]" placeholder="Price" step="0.01"/></td>
 			<td style="text-align: center;"><a class="button remove-row" href="#">Remove</a></td>
 		</tr>
 		

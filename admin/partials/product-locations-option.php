@@ -34,7 +34,7 @@ wp_nonce_field( 'repeterBox-locations', 'anpd-locations' );
 						<input type="text"  style="width:98%;" name="location_title[]" value="<?php if($field['location_title'] != '') echo esc_attr( $field['location_title'] ); ?>" placeholder="Title" />
 					</td>
 					<td>
-						<input type="number" style="width:98%;" name="location_price[]" value="<?php if ($field['location_price'] != '') echo esc_attr( $field['location_price'] ); ?>" placeholder="Location Price"/>
+						<input type="number" style="width:98%;" name="location_price[]" value="<?php if ($field['location_price'] != '') echo esc_attr( $field['location_price'] ); ?>" placeholder="Location Price" step="0.01"/>
 					</td>
 					<td style="text-align: center;">
 						<a class="button remove-row" href="#1">Remove</a>
@@ -54,7 +54,7 @@ wp_nonce_field( 'repeterBox-locations', 'anpd-locations' );
 					<input type="hidden" class="attechments-ids" name="locations_img[]" />
 				</td>
 				<td><input type="text" style="width:98%;" name="location_title[]" placeholder="Location Title"/></td>
-				<td><input type="number" style="width:98%;" name="location_price[]" placeholder="Location Price"/></td>
+				<td><input type="number" style="width:98%;" name="location_price[]" placeholder="Location Price" step="0.01"/></td>
 				<td style="text-align: center;"><a class="button  cmb-remove-row-button button-disabled" href="#">Remove</a></td>
 			</tr>
 		<?php endif; ?>
@@ -68,7 +68,7 @@ wp_nonce_field( 'repeterBox-locations', 'anpd-locations' );
 				<input type="hidden" class="attechments-ids" name="locations_img[]" />
 			</td>
 			<td><input type="text" style="width:98%;" name="location_title[]" placeholder="Location Title"/></td>
-			<td><input type="number" style="width:98%;" name="location_price[]" placeholder="Price"/></td>
+			<td><input type="number" style="width:98%;" name="location_price[]" placeholder="Price" step="0.01"/></td>
 			<td style="text-align: center;"><a class="button remove-row" href="#">Remove</a></td>
 		</tr>
 		

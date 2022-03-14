@@ -100,4 +100,36 @@ class ANPD_Public {
 
 	}
 
+	public function ANPD_Custom_product_template( $data ) {
+    	global $product , $post;
+        $configrator = get_post_meta( $post->ID, 'anpd_config_selector', true );
+        if(is_singular('product') && !empty($configrator)) {
+		  require_once plugin_dir_path( dirname( __FILE__ ) ) . 'public/woocommerce/anpd-single-product.php';
+        }
+	  return $data;
+	}
+
+	public function ANPD_remove_hooks_product_page(){
+		global $product , $post;
+        if(is_singular('product')) {
+        	$configrator = get_post_meta( $post->ID, 'anpd_config_selector', true );
+        	if (!empty($configrator)) {
+	        	// remove title
+				remove_action( 'woocommerce_single_product_summary', 'woocommerce_template_single_title', 5 );
+				// remove  rating  stars
+				remove_action( 'woocommerce_single_product_summary', 'woocommerce_template_single_rating', 10 );
+				// remove product meta 
+				remove_action( 'woocommerce_single_product_summary', 'woocommerce_template_single_meta', 40 );
+				// remove  description
+				remove_action( 'woocommerce_single_product_summary', 'woocommerce_template_single_excerpt', 20 );
+				// remove images
+				remove_action( 'woocommerce_before_single_product_summary', 'woocommerce_show_product_images', 20 );
+				// remove related products
+				remove_action( 'woocommerce_after_single_product_summary', 'woocommerce_output_related_products', 20 );
+				// remove additional information tabs
+				remove_action('woocommerce_after_single_product_summary ','woocommerce_output_product_data_tabs',10);
+			}
+        }
+	}
+
 }

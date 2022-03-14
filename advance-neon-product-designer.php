@@ -72,10 +72,12 @@ require plugin_dir_path( __FILE__ ) . 'includes/class-advance-neon-product-desig
  *
  * @since    1.0.0
  */
+
 function run_ANPD() {
 
 	$plugin = new ANPD();
 	$plugin->run();
 
 }
+
 run_ANPD();

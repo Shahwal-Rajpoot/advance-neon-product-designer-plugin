@@ -160,7 +160,7 @@ class ANPD {
 		$this->loader->add_action( 'admin_menu', $plugin_admin, 'add_ANPD_parts_submenu' );
 
 		$this->loader->add_action( 'init', $plugin_admin, 'Rigister_cpt_ANPD' );
-		
+
 		$this->loader->add_action( 'admin_init', $plugin_admin, 'anpd_colors_repeter_meta_boxes' );
 		$this->loader->add_action( 'save_post', $plugin_admin, 'anpd_colors_meta_box_save', 1 );
 
@@ -178,6 +178,8 @@ class ANPD {
 		$this->loader->add_action( 'woocommerce_product_options_general_product_data', $plugin_admin, 'get_product_config_selector' );
 		$this->loader->add_action( 'woocommerce_process_product_meta', $plugin_admin, 'ANPD_woo_general_fields_save' );
 
+
+
 	}
 
 	/**
@@ -187,12 +189,14 @@ class ANPD {
 	 * @since    1.0.0
 	 * @access   private
 	 */
-	private function define_public_hooks() {
+	public function define_public_hooks() {
 
 		$plugin_public = new ANPD_Public( $this->get_ANPD(), $this->get_version() );
 
 		$this->loader->add_action( 'wp_enqueue_scripts', $plugin_public, 'enqueue_styles' );
 		$this->loader->add_action( 'wp_enqueue_scripts', $plugin_public, 'enqueue_scripts' );
+		$this->loader->add_action('woocommerce_before_single_product', $plugin_public,'ANPD_Custom_product_template');
+		$plugin_public->ANPD_remove_hooks_product_page();
 
 	}
 

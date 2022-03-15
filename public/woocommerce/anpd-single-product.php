@@ -65,6 +65,7 @@ $locations = get_post_meta( $configrator, 'anpd_location_group', true );
 						<div class="col-anpd-options">
 							<div class="anpd-row">
 								<div class="anpd-col-6">
+									<button class="andp-font-button"><span class="anpd-font-name"><?php _e(urldecode($fonts[0]['font']),'advance-neon-product-designer'); ?></span><span class="anpd-arrow"></span></button>
 								</div>
 								<div class="anpd-col-6">
 									<label class="anpd-alignment-label">
@@ -89,6 +90,22 @@ $locations = get_post_meta( $configrator, 'anpd_location_group', true );
 										<div class="anpd-bar anpd-bar-80"></div>
 									</label>
 								</div>
+							</div>
+							<div class="font-options" style="display: none;">
+								<?php
+								$i = 0; 
+								foreach ($fonts as $font) { 
+									if($i == 0) { $checked = "checked"; $highlight_font = "anpd-font-highlight";}else {$checked = '';$highlight_font = '';}
+									$font_decode = urldecode($font['font']);
+								?>
+									<label class="anpd-font-label <?php _e($highlight_font,'advance-neon-product-designer'); ?>">
+										<input type="radio" name="font" value="<?php _e($font_decode,'advance-neon-product-designer'); ?>" <?php _e($checked,'advance-neon-product-designer'); ?>>
+										<div class="option-one"></div>
+										<?php _e($font_decode, 'advance-neon-product-designer'); ?>
+									</label>
+								<?php 
+									$i++;
+								} ?>
 							</div>
 						</div>
 					</div>
@@ -180,14 +197,30 @@ $locations = get_post_meta( $configrator, 'anpd_location_group', true );
 	    jQuery('.anpd-alignment-label').removeClass('anpd-alignment-highlight');
 	    jQuery(this).parent('.anpd-alignment-label').addClass('anpd-alignment-highlight');
   	});
+
   	jQuery('input[name=backing]').change(function() {
 	    jQuery('.anpd-backing-label').removeClass('anpd-backing-highlight');
 	    jQuery(this).parent('.anpd-backing-label').addClass('anpd-backing-highlight');
   	});
+
   	jQuery('input[name=size]').change(function() {
 	    jQuery('.anpd-size-label').removeClass('anpd-size-highlight');
 	    jQuery(this).parent('.anpd-size-label').addClass('anpd-size-highlight');
   	});
+
+  	jQuery('input[name=font]').change(function() {
+	    jQuery('.anpd-font-label').removeClass('anpd-font-highlight');
+	    jQuery(this).parent('.anpd-font-label').addClass('anpd-font-highlight');
+	    font_name = jQuery(this).val();
+	    jQuery('.andp-font-button .anpd-font-name').text(font_name);
+  	});
+
+
+  	jQuery('.andp-font-button').on('click', function(e) {
+	  jQuery(this).toggleClass('anpd-active');
+	  jQuery(".font-options").slideToggle();
+	  e.preventDefault()
+	});
 
   	jQuery('input[name=color]').change(function() {
 	    color = jQuery(this).val();

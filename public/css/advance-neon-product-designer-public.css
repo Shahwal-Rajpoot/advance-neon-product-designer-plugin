@@ -2,15 +2,8 @@
  * All of the CSS for your public-facing functionality should be
  * included in this file.
  */
-div.product,.woocommerce-breadcrumb{
-	display: none;
-}
-.woocommerce .wp-site-blocks>.wp-block-group{
-    max-width: 100%;
-    margin-left: auto;
-    margin-right: auto;
-    width: 100%;
-}
+
+
  .anpd-container{
  	width: 100%;
  	max-width: 100%;
@@ -39,7 +32,7 @@ div.product,.woocommerce-breadcrumb{
   padding-left: 15px;
   box-sizing: border-box;
 }
-.col {
+.anpd-col {
   -ms-flex-preferred-size: 0;
   flex-basis: 0;
   -ms-flex-positive: 1;
@@ -258,7 +251,6 @@ div.product,.woocommerce-breadcrumb{
     text-align: left;
 }
 .anpd-editor{
-	background-image: url("http://localhost/plugins/wp-content/uploads/2022/03/Vila_Kavran_Senjak_Studio_OBE_foto_Relja_Ivanic_MG_9301-Pano.jpg");
     background-size: cover;
     background-repeat: no-repeat;
     background-position: center center;

@@ -193,8 +193,8 @@ class ANPD {
 
 		$plugin_public = new ANPD_Public( $this->get_ANPD(), $this->get_version() );
 
-		$this->loader->add_action( 'wp_enqueue_scripts', $plugin_public, 'enqueue_styles' );
-		$this->loader->add_action( 'wp_enqueue_scripts', $plugin_public, 'enqueue_scripts' );
+		$this->loader->add_action( 'wp_enqueue_scripts', $plugin_public, 'anpd_enqueue_styles' );
+		$this->loader->add_action( 'wp_enqueue_scripts', $plugin_public, 'anpd_enqueue_scripts' );
 		$this->loader->add_action('woocommerce_before_single_product', $plugin_public,'ANPD_Custom_product_template');
 		$plugin_public->ANPD_remove_hooks_product_page();
 

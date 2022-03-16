@@ -59,7 +59,7 @@ class ANPD_Public {
 	 *
 	 * @since    1.0.0
 	 */
-	public function enqueue_styles() {
+	public function anpd_enqueue_styles() {
 
 		/**
 		 * This function is provided for demonstration purposes only.
@@ -82,7 +82,7 @@ class ANPD_Public {
 	 *
 	 * @since    1.0.0
 	 */
-	public function enqueue_scripts() {
+	public function anpd_enqueue_scripts() {
 
 		/**
 		 * This function is provided for demonstration purposes only.
@@ -95,8 +95,8 @@ class ANPD_Public {
 		 * between the defined hooks and the functions defined in this
 		 * class.
 		 */
-
-		wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/advance-neon-product-designer-public.js', array( 'jquery' ), $this->version, false );
+		wp_enqueue_script( $this->plugin_name.'-jquery-ui', plugin_dir_url( __FILE__ ) . 'js/jquery-ui.js', array( 'jquery' ), $this->version, true );
+		wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/advance-neon-product-designer-public.js', array( 'jquery' ), $this->version, true );
 
 	}
 
@@ -113,7 +113,7 @@ class ANPD_Public {
 		global $product , $post;
         if(is_singular('product')) {
         	$configrator = get_post_meta( $post->ID, 'anpd_config_selector', true );
-        	if (!empty($configrator)) {
+        	if (get_post_meta( $post->ID, 'anpd_config_selector', true )) {
 	        	// remove title
 				remove_action( 'woocommerce_single_product_summary', 'woocommerce_template_single_title', 5 );
 				// remove  rating  stars

@@ -19,7 +19,7 @@ wp_nonce_field( 'repeterBox-backings', 'anpd-backings' );
 				?>
 				<tr>
 					<td><input type="text"  style="width:98%;" name="backing_title[]" value="<?php if($field['backing_title'] != '') echo esc_attr( $field['backing_title'] ); ?>" placeholder="Title" /></td>
-					<td><input type="number" style="width:98%;" name="backing_price[]" value="<?php if ($field['backing_price'] != '') echo esc_attr( $field['backing_price'] ); ?>" placeholder="Price" step="0.01"/></td>
+					<td><input type="number" style="width:98%;" name="backing_price[]" value="<?php if ($field['backing_price'] != '') echo esc_attr( $field['backing_price'] ); ?>" placeholder="Price" min="0.01" step="0.01" /></td>
 					<td style="text-align: center;"><a class="button remove-row" href="#1">Remove</a></td>
 				</tr>
 				<?php
@@ -28,13 +28,13 @@ wp_nonce_field( 'repeterBox-backings', 'anpd-backings' );
 			?>
 			<tr>
 				<td><input type="text" style="width:98%;" name="backing_title[]" placeholder="Title"/></td>
-				<td><input type="number" style="width:98%;" name="backing_price[]" placeholder="Price" step="0.01"/></td>
+				<td><input type="number" style="width:98%;" name="backing_price[]" placeholder="Price" min="0.01" step="0.01"/></td>
 				<td style="text-align: center;"><a class="button  cmb-remove-row-button button-disabled" href="#">Remove</a></td>
 			</tr>
 		<?php endif; ?>
 		<tr class="empty-row custom-repeter-text" style="display: none">
 			<td><input type="text" style="width:98%;" name="backing_title[]" placeholder="Title"/></td>
-			<td><input type="number" style="width:98%;" name="backing_price[]" placeholder="Price" step="0.01"/></td>
+			<td><input type="number" style="width:98%;" name="backing_price[]" placeholder="Price" min="0.01" step="0.01"/></td>
 			<td style="text-align: center;"><a class="button remove-row" href="#">Remove</a></td>
 		</tr>
 		

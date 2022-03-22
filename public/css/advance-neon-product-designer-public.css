@@ -13,7 +13,8 @@ textarea#anpd_text {
 #anpd_text_editor{
   text-align: center;
   font-size: 80px;
-  
+  cursor: move;
+  line-height: 45px;
 }
  .anpd-container{
  	width: 100%;

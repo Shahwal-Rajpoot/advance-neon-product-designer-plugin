@@ -8,7 +8,38 @@ $backings = get_post_meta( $configrator, 'anpd_backing_group', true );
 $sizes = get_post_meta( $configrator, 'anpd_size_group', true );
 $fonts = get_post_meta( $configrator, 'anpd_font_group', true );
 $locations = get_post_meta( $configrator, 'anpd_location_group', true );
-
+foreach ($fonts as $font) {
+	$font_NU = urldecode($font['font']);
+	$font_expload = explode("_x_",$font_NU);
+	global $font_slug,$font_family;
+	for ($x=0; $x < count($font_expload) ; $x++) { 
+		if ($x==0) {
+			$font_family = $font_expload[$x];
+		}elseif ($x==1) {
+			$font_slug = $font_expload[$x];
+		}
+	}
+	$new_fonts[] = array(
+		'font_family' => $font_family,
+		'font_slug' =>  $font_slug,
+		'font_price' => $font['font_price']
+	);
+}
+?>
+<style type="text/css">
+<?php
+foreach ($new_fonts as $font) {
+	?>
+	@font-face {
+	  font-family: <?php echo $font["font_family"] ?>;
+	  src: url('<?php echo $font["font_slug"] ?>');
+	}
+	
+	<?php
+}
+?>
+</style>
+<?php
 //For 1st location check
 if (!empty($locations)) {
 	$start_bg = wp_get_attachment_image_src($locations[0]['locations_img'], 'full');
@@ -16,10 +47,9 @@ if (!empty($locations)) {
 }else{
 	$attr_bg = '';
 }
-
 //For 1st Font check
-if (!empty($fonts)) {
-	$first_font = urldecode($fonts[0]['font']);
+if (!empty($new_fonts)) {
+	$first_font = $new_fonts[0]['font_family'];
 }else{
 	$first_font = 'None';
 }
@@ -43,9 +73,10 @@ if (!empty($colors)) {
 	}
 </style>
 <div class="anpd-container">
+	<h1 style="text-align: center;font-size: 30px;"><?php echo the_title(); ?></h1>
 	<div class="anpd-row">
-		<div class="anpd-editor anpd-col-8" style="--575e6858:<?php echo $first_colors; ?>;background-image: linear-gradient(0deg, rgb(57, 57, 57) 0%, rgb(0 0 0 / 23%) 35%),url(<?php echo $attr_bg;  ?>)">
-			<div class="editor_text" id="anpd_text_editor" style="color:var(--575e6858);text-shadow:0 0 10px var(--575e6858),0 0 21px var(--575e6858),0 0 42px var(--575e6858),0 0 62px var(--575e6858),0 0 4px #fff"></div>
+		<div class="anpd-editor anpd-col-8" style="--anpd9987:<?php echo $first_colors; ?>;background-image: linear-gradient(0deg, rgb(57, 57, 57) 0%, rgb(0 0 0 / 23%) 35%),url(<?php echo $attr_bg;  ?>)">
+			<div class="editor_text" id="anpd_text_editor" style="color:var(--anpd9987);text-shadow:0 0 10px var(--anpd9987),0 0 21px var(--anpd9987),0 0 42px var(--anpd9987),0 0 62px var(--anpd9987),0 0 4px #fff"></div>
 		</div>
 		<div class="anpd-col-options anpd-col-4">
 			<form method="post" action="">
@@ -117,16 +148,15 @@ if (!empty($colors)) {
 							</div>
 							<div class="font-options" style="display: none;">
 								<?php
-								if (!empty($fonts)) {
+								if (!empty($new_fonts)) {
 									$i = 0; 
-									foreach ($fonts as $font) { 
+									foreach ($new_fonts as $font) { 
 										if($i == 0) { $checked = "checked"; $highlight_font = "anpd-font-highlight";}else {$checked = '';$highlight_font = '';}
-										$font_decode = urldecode($font['font']);
 									?>
-										<label class="anpd-font-label <?php _e($highlight_font,'advance-neon-product-designer'); ?>">
-											<input type="radio" name="font" value="<?php _e($font_decode,'advance-neon-product-designer'); ?>" <?php _e($checked,'advance-neon-product-designer'); ?>>
+										<label style="font-family: <?php echo $font['font_family'] ?>" class="anpd-font-label <?php _e($highlight_font,'advance-neon-product-designer'); ?>">
+											<input slug="<?php _e($font['font_slug'], 'advance-neon-product-designer'); ?>" type="radio" name="font" value="<?php _e($font['font_family'],'advance-neon-product-designer'); ?>" <?php _e($checked,'advance-neon-product-designer'); ?>>
 											<div class="option-one"></div>
-											<?php _e($font_decode, 'advance-neon-product-designer'); ?>
+											<?php _e($font['font_family'], 'advance-neon-product-designer'); ?>
 										</label>
 									<?php 
 										$i++;
@@ -147,6 +177,15 @@ if (!empty($colors)) {
 								$i = 0; 
 								foreach ($colors as $color) { 
 									if($i == 0) { $checked = "checked";}else {$checked = '';}
+									// $font_NU = urldecode($font['font']);
+									// $font_expload = explode("_x_",$font_NU);
+									// for ($x=0; $x < count($font_expload) ; $x++) { 
+									// 	if ($x==0) {
+									// 		$font_family = $font_expload[$x];
+									// 	}elseif ($x==1) {
+									// 		$font_slug = $font_expload[$x];
+									// 	}
+									// }
 								?>
 								<label class="anpd-container-color">
 								  <input type="radio" name="color" value="<?php _e($color['getcolor'],'advance-neon-product-designer') ?>" <?php _e($checked,'advance-neon-product-designer'); ?>>

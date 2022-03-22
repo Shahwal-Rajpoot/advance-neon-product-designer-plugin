@@ -27,10 +27,10 @@ function font_options($selected_font){
 	foreach ( $url_decode['items'] as $font ) {
 		if ( isset( $font['family'] ) && isset( $font['files'] ) && isset( $font['files']['regular'] ) ) {
 			$selected = '';
-			if ( $selected_font === $font['family'] ) {
+			if ( $selected_font === rawurlencode( esc_attr($font['family']) ) . '_x_'.rawurlencode( esc_attr($font['files']['regular']) ) ) {
 				$selected = 'selected';
 			}
-			echo '<option value="' . rawurlencode( esc_attr($font['family']) ) . '" ' . esc_attr($selected) . '>' . esc_attr($font['family']) . '</option> ';
+			echo '<option value="' . rawurlencode( esc_attr($font['family']) ) . '_x_'.rawurlencode( esc_attr($font['files']['regular']) ).'" ' . esc_attr($selected) . '>' . esc_attr($font['family']) . '</option> ';
 		}
 	}
 }
@@ -51,7 +51,7 @@ function font_options($selected_font){
 				<tr>
 					<td>
 						<?php 
-							$font_selected = urldecode($field['font']);
+							$font_selected = $field['font'];
 						?>
 						<select style="width:98%;" class="form-control anpd-font-select" name="font[]">
 

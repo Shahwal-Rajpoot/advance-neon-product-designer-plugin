@@ -61,6 +61,7 @@
 	    jQuery(this).parent('.anpd-font-label').addClass('anpd-font-highlight');
 	    var font_name = jQuery(this).val();
 	    jQuery('.andp-font-button .anpd-font-name').text(font_name);
+	    jQuery('.andp-font-button .anpd-font-name,#anpd_text_editor').css('font-family',font_name);
   	});
 
 
@@ -74,7 +75,7 @@
 	    var color = jQuery(this).val();
 	    jQuery('.option-two').css('background-color', color);
 	    jQuery('#anpd_text_editor').css('color', color);
-	    jQuery('#anpd_text_editor').css('--575e6858',color);
+	    jQuery('#anpd_text_editor').css('--anpd9987',color);
   	});
 
   	jQuery('#anpd_text').keyup(function() {
@@ -86,5 +87,5 @@
 		var message = jQuery('#anpd_text').val().replace(/\r\n|\r|\n/g,"<br />");
 		jQuery('#anpd_text_editor').html(message);
   	});
-  	
+  	jQuery( "#anpd_text_editor" ).draggable();
 })( jQuery );

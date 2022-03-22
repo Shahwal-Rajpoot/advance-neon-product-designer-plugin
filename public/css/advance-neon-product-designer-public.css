@@ -3,7 +3,18 @@
  * included in this file.
  */
 
-
+textarea#anpd_text {
+  max-width: 100%; 
+  max-height: 100%;
+  width: 100%;
+  min-height: 103px;
+  font-size: 25px;
+}
+#anpd_text_editor{
+  text-align: center;
+  font-size: 80px;
+  
+}
  .anpd-container{
  	width: 100%;
  	max-width: 100%;
@@ -239,8 +250,6 @@
     text-align: center;
     box-shadow: 0px 0px 15px 2px #0000001f;
     padding: 15px 30px;
-    /*max-width: 80%;
-    margin: 0px auto 20px;*/
 }
 .woocommerce-page form .col-anpd-label label{
 	font-size: 15px;
@@ -255,6 +264,9 @@
     background-repeat: no-repeat;
     background-position: center center;
     min-height: 500px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 

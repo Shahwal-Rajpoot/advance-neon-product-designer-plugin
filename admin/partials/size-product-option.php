@@ -3,7 +3,6 @@ global $post;
 $anpd_size_group = get_post_meta($post->ID, 'anpd_size_group', true);
 wp_nonce_field( 'repeterBox-sizes', 'anpd-sizes' );
 ?>
-
 <table class="anpd-table" id="repeatable-fieldset-one" width="100%">
 	<thead>
 		<tr>
@@ -19,7 +18,7 @@ wp_nonce_field( 'repeterBox-sizes', 'anpd-sizes' );
 				?>
 				<tr>
 					<td><input type="text"  style="width:98%;" name="size_title[]" value="<?php if($field['size_title'] != '') echo esc_attr( $field['size_title'] ); ?>" placeholder="100x50" /></td>
-					<td><input type="number" style="width:98%;" name="size_price[]" value="<?php if ($field['size_price'] != '') echo esc_attr( $field['size_price'] ); ?>" placeholder="Price" min="0.01" step="0.01"/></td>
+					<td><input type="number" style="width:98%;" name="size_price[]" value="<?php if ($field['size_price'] != '') echo esc_attr( $field['size_price'] ); ?>" placeholder="Price" min="0" step="0.01"/></td>
 					<td style="text-align: center;"><a class="button remove-row" href="#1">Remove</a></td>
 				</tr>
 				<?php
@@ -28,13 +27,13 @@ wp_nonce_field( 'repeterBox-sizes', 'anpd-sizes' );
 			?>
 			<tr>
 				<td><input type="text" style="width:98%;" name="size_title[]" placeholder="100x50"/></td>
-				<td><input type="number" style="width:98%;" name="size_price[]" placeholder="Price" min="0.01" step="0.01"/></td>
+				<td><input type="number" style="width:98%;" name="size_price[]" placeholder="Price" min="0" step="0.01"/></td>
 				<td style="text-align: center;"><a class="button  cmb-remove-row-button button-disabled" href="#">Remove</a></td>
 			</tr>
 		<?php endif; ?>
 		<tr class="empty-row custom-repeter-text" style="display: none">
 			<td><input type="text" style="width:98%;" name="size_title[]" placeholder="100x50"/></td>
-			<td><input type="number" style="width:98%;" name="size_price[]" placeholder="Price" min="0.01" step="0.01"/></td>
+			<td><input type="number" style="width:98%;" name="size_price[]" placeholder="Price" min="0" step="0.01"/></td>
 			<td style="text-align: center;"><a class="button remove-row" href="#">Remove</a></td>
 		</tr>
 		

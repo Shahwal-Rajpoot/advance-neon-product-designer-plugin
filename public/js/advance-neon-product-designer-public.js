@@ -31,7 +31,7 @@
 
 	 jQuery('input[name=location]').change(function(){
 	    var imageUrl = jQuery( 'input[name=location]:checked' ).val();
-	    jQuery('.anpd-editor').css('background-image', 'url(' + imageUrl + ')');
+	    jQuery('.anpd-editor').css('background-image', 'linear-gradient(0deg, rgb(57, 57, 57) 0%, rgb(0 0 0 / 23%) 35%),url(' + imageUrl + ')');
 	});
 
 	jQuery('input[name=tube]').change(function() {
@@ -42,6 +42,8 @@
   	jQuery('input[name=alignment]').change(function() {
 	    jQuery('.anpd-alignment-label').removeClass('anpd-alignment-highlight');
 	    jQuery(this).parent('.anpd-alignment-label').addClass('anpd-alignment-highlight');
+	    var align = jQuery(this).val().toLowerCase();
+    	jQuery('#anpd_text_editor').css('text-align', align);
   	});
 
   	jQuery('input[name=backing]').change(function() {
@@ -71,6 +73,18 @@
   	jQuery('input[name=color]').change(function() {
 	    var color = jQuery(this).val();
 	    jQuery('.option-two').css('background-color', color);
+	    jQuery('#anpd_text_editor').css('color', color);
+	    jQuery('#anpd_text_editor').css('--575e6858',color);
   	});
 
+  	jQuery('#anpd_text').keyup(function() {
+  		var message = jQuery('#anpd_text').val().replace(/\r\n|\r|\n/g,"<br />");
+  		jQuery('#anpd_text_editor').html(message);
+	});
+
+  	jQuery(document).ready(function(){
+		var message = jQuery('#anpd_text').val().replace(/\r\n|\r|\n/g,"<br />");
+		jQuery('#anpd_text_editor').html(message);
+  	});
+  	
 })( jQuery );

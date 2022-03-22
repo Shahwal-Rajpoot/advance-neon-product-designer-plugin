@@ -29,6 +29,7 @@ if (!empty($colors)) {
 }else{
 	$first_colors = '';
 }
+//print_r(explode('x', $sizes));
 ?>
 <style type="text/css">
 	div.product,.woocommerce-breadcrumb{
@@ -43,12 +44,20 @@ if (!empty($colors)) {
 </style>
 <div class="anpd-container">
 	<div class="anpd-row">
-		<div class="anpd-editor anpd-col-8" style="background-image: url(<?php echo $attr_bg;  ?>)">
-			<textarea id="design">Hello</textarea>
+		<div class="anpd-editor anpd-col-8" style="--575e6858:<?php echo $first_colors; ?>;background-image: linear-gradient(0deg, rgb(57, 57, 57) 0%, rgb(0 0 0 / 23%) 35%),url(<?php echo $attr_bg;  ?>)">
+			<div class="editor_text" id="anpd_text_editor" style="color:var(--575e6858);text-shadow:0 0 10px var(--575e6858),0 0 21px var(--575e6858),0 0 42px var(--575e6858),0 0 62px var(--575e6858),0 0 4px #fff"></div>
 		</div>
 		<div class="anpd-col-options anpd-col-4">
 			<form method="post" action="">
 				<div class="anpd-height-fixed">
+					<div class="anpd-option-card">
+						<div class="col-anpd-label">
+							<label for="locations"><?php _e('Add Text Here', 'advance-neon-product-designer'); ?></label>
+						</div>
+						<div class="col-anpd-options">
+							<textarea class="text-option" name="anpd_text" id="anpd_text">Hello</textarea>
+						</div>
+					</div>
 					<div class="anpd-option-card">
 						<div class="col-anpd-label">
 							<label for="locations"><?php _e('Location', 'advance-neon-product-designer'); ?></label>

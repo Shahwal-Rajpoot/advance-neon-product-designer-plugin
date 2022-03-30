@@ -29,10 +29,12 @@
 	 * practising this, we should strive to set a better example in our own work.
 	 */
 
-	 jQuery('input[name=location]').change(function(){
-	    var imageUrl = jQuery( 'input[name=location]:checked' ).val();
+ 	jQuery('input[name=anpd-bg]').change(function(){
+	    var imageUrl = jQuery( 'input[name=anpd-bg]:checked' ).val();
 	    jQuery('.anpd-editor').css('background-image', 'linear-gradient(0deg, rgb(57, 57, 57) 0%, rgb(0 0 0 / 23%) 35%),url(' + imageUrl + ')');
 	});
+
+	
 
 	jQuery('input[name=tube]').change(function() {
 	    jQuery('.tube-option').removeClass('anpd-highlight');
@@ -64,6 +66,11 @@
 	    jQuery('.andp-font-button .anpd-font-name,#anpd_text_editor').css('font-family',font_name);
   	});
 
+  	jQuery('input[name=location]').change(function() {
+	    jQuery('.anpd-loc-label').removeClass('anpd-loc-highlight');
+	    jQuery(this).parent('.anpd-loc-label').addClass('anpd-loc-highlight');
+  	});
+
 
   	jQuery('.andp-font-button').on('click', function(e) {
 	  jQuery(this).toggleClass('anpd-active');
@@ -71,12 +78,24 @@
 	  e.preventDefault()
 	});
 
+
   	jQuery('input[name=color]').change(function() {
 	    var color = jQuery(this).val();
 	    jQuery('.option-two').css('background-color', color);
 	    jQuery('#anpd_text_editor').css('color', color);
 	    jQuery('#anpd_text_editor').css('--anpd9987',color);
+	    
   	});
+
+  	var shadow = jQuery('#anpd_text_editor').css('text-shadow');
+  	jQuery('#shadow_on_off').change(function(){
+  		jQuery('input[name=color]')
+	    if (jQuery(this).is(':checked')) {
+	    	jQuery('#anpd_text_editor').css('text-shadow',shadow);
+	    }else{
+	    	jQuery('#anpd_text_editor').css('text-shadow','none');
+	    }
+	});
 
   	jQuery('#anpd_text').keyup(function() {
   		var message = jQuery('#anpd_text').val().replace(/\r\n|\r|\n/g,"<br />");

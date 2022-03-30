@@ -73,6 +73,7 @@ class ANPD_Public {
 		 * class.
 		 */
 
+		wp_enqueue_style( $this->plugin_name.'-fancybox', plugin_dir_url( __FILE__ ) . 'css/jquery.fancybox.css', array(), $this->version, 'all' );
 		wp_enqueue_style( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'css/advance-neon-product-designer-public.css', array(), $this->version, 'all' );
 
 	}
@@ -96,6 +97,7 @@ class ANPD_Public {
 		 * class.
 		 */
 		wp_enqueue_script( $this->plugin_name.'-jquery-ui', plugin_dir_url( __FILE__ ) . 'js/jquery-ui.js', array( 'jquery' ), $this->version, true );
+		wp_enqueue_script( $this->plugin_name.'-fancybox-jquery', plugin_dir_url( __FILE__ ) . 'js/jquery.fancybox.js', array( 'jquery' ), $this->version, true );
 		wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/advance-neon-product-designer-public.js', array( 'jquery' ), $this->version, true );
 
 	}

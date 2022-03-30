@@ -4,10 +4,11 @@
 	var $ = jQuery;
 	jQuery(document).ready(function( $ ){
 		$( '.add-row' ).on('click', function() {
-			var row = $(this).parents('.inside').find( '.empty-row.custom-repeter-text' ).clone(true);
+			var row = $(this).parents('.inside_anpd').find( '.empty-row.custom-repeter-text' ).clone(true);
 			row.removeClass( 'empty-row custom-repeter-text' ).css('display','table-row');
-			row.insertBefore( $(this).parents('.inside').find('.anpd-table tbody>tr:last') );
+			row.insertBefore( $(this).parents('.inside_anpd').find('.anpd-table tbody>tr:last') );
 			row.find(".font-options").addClass('anpd-font-select').select2({});
+			row.find(".font-options.anpd-font-select").attr('name', row.find(".font-options.anpd-font-select").attr('data-name'));
 			row.find(".anpd-font-select").removeClass('font-options');
 			return false;
 		});

@@ -5,44 +5,36 @@ if ( ! defined( 'ABSPATH' ) ) {
 $configrator = get_post_meta( $post->ID, 'anpd_config_selector', true );
 $colors = get_post_meta( $configrator, 'anpd_color_group', true );
 $backings = get_post_meta( $configrator, 'anpd_backing_group', true );
-$sizes = get_post_meta( $configrator, 'anpd_size_group', true );
 $fonts = get_post_meta( $configrator, 'anpd_font_group', true );
 $locations = get_post_meta( $configrator, 'anpd_location_group', true );
+$backgrounds = get_post_meta( $configrator, 'anpd_background_group', true );
 foreach ($fonts as $font) {
-	$font_NU = urldecode($font['font']);
-	$font_expload = explode("_x_",$font_NU);
-	global $font_slug,$font_family;
-	for ($x=0; $x < count($font_expload) ; $x++) { 
-		if ($x==0) {
-			$font_family = $font_expload[$x];
-		}elseif ($x==1) {
-			$font_slug = $font_expload[$x];
+	foreach ($font['prams'] as $key_size_label => $sizes_pram) {
+		$new_sizes[] = $key_size_label;
+	}
+	foreach ($font['font'] as $key => $value) {
+		$font_NU = urldecode($value);
+		$font_expload = explode("_x_",$font_NU);
+		global $font_slug,$font_family;
+		for ($x=0; $x < count($font_expload) ; $x++) { 
+			if ($x==0) {
+				$font_family = $font_expload[$x];
+			}elseif ($x==1) {
+				$font_slug = $font_expload[$x];
+			}
 		}
+		$new_fonts[] = array(
+			'font_family' => $font_family,
+			'font_slug' =>  $font_slug
+		);
 	}
-	$new_fonts[] = array(
-		'font_family' => $font_family,
-		'font_slug' =>  $font_slug,
-		'font_price' => $font['font_price']
-	);
 }
-?>
-<style type="text/css">
-<?php
-foreach ($new_fonts as $font) {
-	?>
-	@font-face {
-	  font-family: <?php echo $font["font_family"] ?>;
-	  src: url('<?php echo $font["font_slug"] ?>');
-	}
-	
-	<?php
-}
-?>
-</style>
-<?php
+$new_sizes =array_unique($new_sizes);
+// echo '<pre>';
+// print_r(array_unique($new_sizes));
 //For 1st location check
-if (!empty($locations)) {
-	$start_bg = wp_get_attachment_image_src($locations[0]['locations_img'], 'full');
+if (!empty($backgrounds)) {
+	$start_bg = wp_get_attachment_image_src($backgrounds[0]['backgrounds_img'], 'full');
 	$attr_bg = esc_attr($start_bg[0]);
 }else{
 	$attr_bg = '';
@@ -59,8 +51,15 @@ if (!empty($colors)) {
 }else{
 	$first_colors = '';
 }
-//print_r(explode('x', $sizes));
 ?>
+<style type="text/css">
+<?php foreach ($new_fonts as $font) { ?>
+	@font-face {
+	  font-family: <?php echo $font["font_family"] ?>;
+	  src: url('<?php echo $font["font_slug"] ?>');
+	}
+<?php } ?>
+</style>
 <style type="text/css">
 	div.product,.woocommerce-breadcrumb{
 		display: none;
@@ -76,6 +75,10 @@ if (!empty($colors)) {
 	<h1 style="text-align: center;font-size: 30px;"><?php echo the_title(); ?></h1>
 	<div class="anpd-row">
 		<div class="anpd-editor anpd-col-8" style="--anpd9987:<?php echo $first_colors; ?>;background-image: linear-gradient(0deg, rgb(57, 57, 57) 0%, rgb(0 0 0 / 23%) 35%),url(<?php echo $attr_bg;  ?>)">
+			<label class="anpd-switch">
+			  <input type="checkbox" checked id="shadow_on_off">
+			  <span class="anpd-slider anpd-round"></span>
+			</label>
 			<div class="editor_text" id="anpd_text_editor" style="color:var(--anpd9987);text-shadow:0 0 10px var(--anpd9987),0 0 21px var(--anpd9987),0 0 42px var(--anpd9987),0 0 62px var(--anpd9987),0 0 4px #fff"></div>
 		</div>
 		<div class="anpd-col-options anpd-col-4">
@@ -93,23 +96,46 @@ if (!empty($colors)) {
 						<div class="col-anpd-label">
 							<label for="locations"><?php _e('Location', 'advance-neon-product-designer'); ?></label>
 						</div>
-						<div class="col-anpd-options">
+						<div class="col-anpd-options location">
 							<?php
 							if (!empty($locations)) {
 								$i = 0; 
 								foreach ($locations as $location) { 
-									if($i == 0) { $checked = "checked";}else {$checked = '';}
-									$image_attributes = wp_get_attachment_image_src($location['locations_img'], 'full');
+									if($i == 0) { $checked = "checked"; $highlight_loc = "anpd-loc-highlight";}else {$checked = '';$highlight_loc = '';}
 								?>
-								<label class="anpd-container-checkmark">
-								  <input type="radio" name="location" value="<?php echo esc_attr($image_attributes[0]); ?>" <?php _e($checked,'advance-neon-product-designer'); ?>>
-								  <span class="anpd-checkmark"><img src="<?php echo esc_attr($image_attributes[0]); ?>" ></span><?php _e($location['location_title'], 'advance-neon-product-designer'); ?>
+								<label class="anpd-container-checkmark anpd-loc-label <?php _e($highlight_loc,'advance-neon-product-designer'); ?>">
+								  <input type="radio" name="location" value="<?php  _e($location['location_title'], 'advance-neon-product-designer'); ?>" <?php _e($checked,'advance-neon-product-designer'); ?>>
+								  <span class="anpd-checkmark"></span><?php _e($location['location_title'], 'advance-neon-product-designer'); ?>
 								</label>
 								<?php 
 									$i++;
 								} 
 							}else{
-								_e('Please add product Background Locations', 'advance-neon-product-designer');
+								_e('Please add product Locations', 'advance-neon-product-designer');
+							} ?>
+						</div>
+					</div>
+					<div class="anpd-option-card">
+						<div class="col-anpd-label">
+							<label for="locations"><?php _e('Background', 'advance-neon-product-designer'); ?></label>
+						</div>
+						<div class="col-anpd-options">
+							<?php
+							if (!empty($backgrounds)) {
+								$i = 0; 
+								foreach ($backgrounds as $background) { 
+									if($i == 0) { $checked = "checked";}else {$checked = '';}
+									$image_attributes = wp_get_attachment_image_src($background['backgrounds_img'], 'full');
+								?>
+								<label class="anpd-container-checkmark">
+								  <input type="radio" name="anpd-bg" value="<?php echo esc_attr($image_attributes[0]); ?>" <?php _e($checked,'advance-neon-product-designer'); ?>>
+								  <span class="anpd-checkmark"><img src="<?php echo esc_attr($image_attributes[0]); ?>" ></span>
+								</label>
+								<?php 
+									$i++;
+								} 
+							}else{
+								_e('Please add product Backgrounds', 'advance-neon-product-designer');
 							} ?>
 						</div>
 					</div>
@@ -177,20 +203,18 @@ if (!empty($colors)) {
 								$i = 0; 
 								foreach ($colors as $color) { 
 									if($i == 0) { $checked = "checked";}else {$checked = '';}
-									// $font_NU = urldecode($font['font']);
-									// $font_expload = explode("_x_",$font_NU);
-									// for ($x=0; $x < count($font_expload) ; $x++) { 
-									// 	if ($x==0) {
-									// 		$font_family = $font_expload[$x];
-									// 	}elseif ($x==1) {
-									// 		$font_slug = $font_expload[$x];
-									// 	}
-									// }
+									$image_attributes = wp_get_attachment_image_src($color['color_exp_img'], 'full');
+									
 								?>
 								<label class="anpd-container-color">
 								  <input type="radio" name="color" value="<?php _e($color['getcolor'],'advance-neon-product-designer') ?>" <?php _e($checked,'advance-neon-product-designer'); ?>>
 								  <span class="anpd-color-checkmark" style="background-color: <?php _e($color['getcolor'],'advance-neon-product-designer') ?>"></span>
+								  <br>
+								  <a class="anpd_example" data-fancybox data-src="<?php echo '#'.$color['color_exp_img']; ?>" href="javascript:;">Example</a>
 								</label>
+								<div style="display: none;" id="<?php echo $color['color_exp_img']; ?>">
+									<img src="<?php echo esc_attr($image_attributes[0]); ?>"> 
+								</div>
 								<?php 
 									$i++;
 								} 
@@ -228,15 +252,16 @@ if (!empty($colors)) {
 						</div>
 						<div class="col-anpd-options">
 							<?php
-							if (!empty($sizes)) {
+							if (!empty($new_sizes)) {
 								$i = 0; 
-								foreach ($sizes as $size) { 
+								foreach ($new_sizes as $size) { 
 									if($i == 0) { $checked = "checked"; $highlight_size = "anpd-size-highlight";}else {$checked = '';$highlight_size = '';}
+									$replace = str_replace('_', ' ', $size);
 								?>
 									<label class="anpd-size-label <?php _e($highlight_size,'advance-neon-product-designer'); ?>">
-										<input type="radio" name="size" value="<?php _e($size['size_title'],'advance-neon-product-designer'); ?>" <?php _e($checked,'advance-neon-product-designer'); ?>>
+										<input type="radio" name="size" value="<?php _e($replace,'advance-neon-product-designer'); ?>" <?php _e($checked,'advance-neon-product-designer'); ?>>
 										<div class="option-one"></div>
-										<?php _e($size['size_title'], 'advance-neon-product-designer'); ?>
+										<?php _e($replace, 'advance-neon-product-designer'); ?>
 									</label>
 								<?php 
 									$i++;
@@ -269,7 +294,7 @@ if (!empty($colors)) {
 										$i++;
 									}
 								}else{
-									_e('Please Add Sizes For This Product', 'advance-neon-product-designer');
+									_e('Please Add Backing For This Product', 'advance-neon-product-designer');
 								} ?>
 							</div>
 						</div>

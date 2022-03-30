@@ -164,11 +164,11 @@ class ANPD {
 		$this->loader->add_action( 'admin_init', $plugin_admin, 'anpd_colors_repeter_meta_boxes' );
 		$this->loader->add_action( 'save_post', $plugin_admin, 'anpd_colors_meta_box_save', 1 );
 
+		$this->loader->add_action( 'admin_init', $plugin_admin, 'anpd_backgrounds_repeter_meta_boxes' );
+		$this->loader->add_action( 'save_post', $plugin_admin, 'anpd_background_meta_box_save', 1 );
+
 		$this->loader->add_action( 'admin_init', $plugin_admin, 'anpd_backing_repeter_meta_boxes' );
 		$this->loader->add_action( 'save_post', $plugin_admin, 'anpd_backing_meta_box_save', 1 );
-
-		$this->loader->add_action( 'admin_init', $plugin_admin, 'anpd_size_repeter_meta_boxes' );
-		$this->loader->add_action( 'save_post', $plugin_admin, 'anpd_size_meta_box_save', 1 );
 
 		$this->loader->add_action( 'admin_init', $plugin_admin, 'anpd_font_repeter_meta_boxes' );
 		$this->loader->add_action( 'save_post', $plugin_admin, 'anpd_font_meta_box_save', 1 );

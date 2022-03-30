@@ -309,14 +309,12 @@ class ANPD_Admin {
 
 		$new = array();
 		$titles = $_POST['location_title'];
-		$media = $_POST['locations_img'];
 		$price = $_POST['location_price'];
-		$count = count( $media );
+		$count = count( $titles );
 		for ( $i = 0; $i < $count; $i++ ) {
 			if ( $titles[$i] != '' ) {
 				$new[$i]['location_title'] = stripslashes( strip_tags( $titles[$i] ) );
 				$new[$i]['location_price'] = stripslashes( $price[$i] );
-				$new[$i]['locations_img'] = stripslashes( $media[$i] );
 			}
 		}
 
@@ -365,80 +363,13 @@ class ANPD_Admin {
 
 		$old = get_post_meta($post_id, 'anpd_font_group', true);
 
-		$new = array();
-		$titles = $_POST['font'];
-		$price = $_POST['font_price'];
-		$count = count( $titles );
-		for ( $i = 0; $i < $count; $i++ ) {
-			if ( $titles[$i] != '' ) {
-				$new[$i]['font'] = stripslashes( strip_tags( $titles[$i] ) );
-				$new[$i]['font_price'] = stripslashes( $price[$i] );
-			}
-		}
+		$new = $_POST['groupdata'];
 
 		if ( !empty( $new ) && $new != $old ){
 			update_post_meta( $post_id, 'anpd_font_group', $new );
 		} elseif ( empty($new) && $old ) {
-			delete_post_meta( $post_id, 'anpd_font_group', $old );
+			delete_post_meta( $post_id, 'anpd_font_group', $_POST['groupdata'] );
 		}
-		$anpd_font= $_REQUEST['anpd_font'];
-		update_post_meta( $post_id, 'anpd_font', $anpd_font );
-	}
-
-	/**
-	 * Add size meta box to post
-	 *
-	 * @since    1.0.0
-	 */
-	public function anpd_size_repeter_meta_boxes(){
-		$this->anpd_add_repeter_meta_boxes('anpd-configurator','anpd-size-repeter-data','ANPD Size','anpd_size_meta_box_callback');
-	}
-
-	/**
-	 * meta box callback function for size
-	 *
-	 * @since    1.0.0
-	 */
-	public function anpd_size_meta_box_callback($post) {
-		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/partials/size-product-option.php';
-	}
-
-	/**
-	 * Save size Meta Box values
-	 *
-	 * @since    1.0.0
-	 */
-	public function anpd_size_meta_box_save($post_id) {
-		global $post;
-		if (!isset($_POST['anpd-sizes']) || !wp_verify_nonce($_POST['anpd-sizes'], 'repeterBox-sizes'))
-			return;
-
-		if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE)
-			return;
-
-		if (!current_user_can('edit_post', $post_id))
-			return;
-
-		$old = get_post_meta($post_id, 'anpd_size_group', true);
-
-		$new = array();
-		$titles = $_POST['size_title'];
-		$price = $_POST['size_price'];
-		$count = count( $titles );
-		for ( $i = 0; $i < $count; $i++ ) {
-			if ( $titles[$i] != '' ) {
-				$new[$i]['size_title'] = stripslashes( strip_tags( $titles[$i] ) );
-				$new[$i]['size_price'] = stripslashes( $price[$i] );
-			}
-		}
-
-		if ( !empty( $new ) && $new != $old ){
-			update_post_meta( $post_id, 'anpd_size_group', $new );
-		} elseif ( empty($new) && $old ) {
-			delete_post_meta( $post_id, 'anpd_size_group', $old );
-		}
-		$anpd_size= $_REQUEST['anpd_size'];
-		update_post_meta( $post_id, 'anpd_size', $anpd_size );
 	}
 
 	/**
@@ -480,11 +411,13 @@ class ANPD_Admin {
 		$new = array();
 		$titles = $_POST['backing_title'];
 		$price = $_POST['backing_price'];
+		$backing_exp_img = $_POST['backing_exp_img'];
 		$count = count( $titles );
 		for ( $i = 0; $i < $count; $i++ ) {
 			if ( $titles[$i] != '' ) {
 				$new[$i]['backing_title'] = stripslashes( strip_tags( $titles[$i] ) );
 				$new[$i]['backing_price'] = stripslashes( $price[$i] );
+				$new[$i]['backing_exp_img'] = stripslashes( $backing_exp_img[$i] );
 			}
 		}
 
@@ -537,14 +470,14 @@ class ANPD_Admin {
 		$titles = $_POST['title'];
 		$getcolors = $_POST['getcolor'];
 		$outputcolor = $_POST['outputcolor'];
-		$price = $_POST['price'];
+		$color_exp_img = $_POST['color_exp_img'];
 		$count = count( $titles );
 		for ( $i = 0; $i < $count; $i++ ) {
 			if ( $titles[$i] != '' ) {
 				$new[$i]['title'] = stripslashes( strip_tags( $titles[$i] ) );
 				$new[$i]['getcolor'] = stripslashes( $getcolors[$i] );
 				$new[$i]['outputcolor'] = stripslashes( $outputcolor[$i] );
-				$new[$i]['price'] = stripslashes( $price[$i] );
+				$new[$i]['color_exp_img'] = stripslashes( $color_exp_img[$i] );
 			}
 		}
 
@@ -555,6 +488,60 @@ class ANPD_Admin {
 		}
 		$anpd_color= $_REQUEST['anpd_color'];
 		update_post_meta( $post_id, 'anpd_color', $anpd_color );
+	}
+
+	/**
+	 * Add background meta box to post
+	 *
+	 * @since    1.0.0
+	 */
+	public function anpd_backgrounds_repeter_meta_boxes(){
+		$this->anpd_add_repeter_meta_boxes('anpd-configurator','anpd-backgrounds-repeter-data','ANPD Backgrounds','anpd_backgrounds_meta_box_callback');
+	}
+
+	/**
+	 * meta box callback function for background
+	 *
+	 * @since    1.0.0
+	 */
+	public function anpd_backgrounds_meta_box_callback($post) {
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/partials/product-bg-options.php';
+	}
+
+	/**
+	 * Save background Meta Box values
+	 *
+	 * @since    1.0.0
+	 */
+	public function anpd_background_meta_box_save($post_id) {
+		global $post;
+		if (!isset($_POST['anpd-backgrounds']) || !wp_verify_nonce($_POST['anpd-backgrounds'], 'repeterBox-backgrounds'))
+			return;
+
+		if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE)
+			return;
+
+		if (!current_user_can('edit_post', $post_id))
+			return;
+
+		$old = get_post_meta($post_id, 'anpd_background_group', true);
+
+		$new = array();
+		$media = $_POST['backgrounds_img'];
+		$count = count( $media );
+		for ( $i = 0; $i < $count; $i++ ) {
+			if ( $media[$i] != '' ) {
+				$new[$i]['backgrounds_img'] = stripslashes( $media[$i] );
+			}
+		}
+
+		if ( !empty( $new ) && $new != $old ){
+			update_post_meta( $post_id, 'anpd_background_group', $new );
+		} elseif ( empty($new) && $old ) {
+			delete_post_meta( $post_id, 'anpd_background_group', $old );
+		}
+		$anpd_background = $_REQUEST['anpd_background'];
+		update_post_meta( $post_id, 'anpd_background', $anpd_background );
 	}
 
 }

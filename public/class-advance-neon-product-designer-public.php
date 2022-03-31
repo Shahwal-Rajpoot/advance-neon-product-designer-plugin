@@ -133,9 +133,91 @@ class ANPD_Public {
 			}
         }
 	}
+
 	Public function ajax_anpd_price_cacl(){
-		$alignment = $_POST['alignment'];
-			wp_send_json_success($_POST);
+		global $post;
+		$anpd_configrator    = $_POST['config_id'];
+		$selected_font       = $_POST['font'];
+		$anpd_size           = $_POST['size'];
+		$selected_location   = $_POST['location'];
+		$selected_color      = $_POST['color'];
+		$alignment           = $_POST['alignment'];
+		$selected_anpd_bg    = $_POST['anpd-bg'];
+		$anpd_tube           = $_POST['tube'];
+		$selected_backing    = $_POST['backing'];
+		$anpd_text           = $_POST['anpd_text'];
+		$conf_data           = $this->get_configrator_data($anpd_configrator);
+		$get_font_group      = $this->get_configrator_font_group($anpd_configrator,$selected_font);
+		$get_font_prams      = $this->get_configrator_font_group_prams($anpd_configrator,$get_font_group);
+		$get_font_size_prams = $this->get_configrator_font_size($anpd_configrator,$get_font_group,$anpd_size);
+		wp_send_json_success($get_font_size_prams);
+	}
+
+	private function get_configrator_data($anpd_configrator){
+		$colors      = get_post_meta( $anpd_configrator, 'anpd_color_group', true );
+		$backings    = get_post_meta( $anpd_configrator, 'anpd_backing_group', true );
+		$fonts       = get_post_meta( $anpd_configrator, 'anpd_font_group', true );
+		$locations   = get_post_meta( $anpd_configrator, 'anpd_location_group', true );
+		$backgrounds = get_post_meta( $anpd_configrator, 'anpd_background_group', true );
+		$conf_data   = array(
+			'anpd_colors'      => $colors,
+			'anpd_backings'    => $backings,
+			'anpd_fonts'       => $fonts,
+			'anpd_locations'   => $locations, 
+			'anpd_backgrounds' => $backgrounds
+		);
+		return $conf_data;
+	}
+
+	private function get_configrator_font_group($anpd_configrator,$selected_font){
+		global $font_slug;
+		$groups       = get_post_meta( $anpd_configrator, 'anpd_font_group', true );
+		$i = 0;
+		foreach ($groups as $key_group => $group) {
+			foreach ($group['font'] as $font_key => $font) {
+				$font_family = $this->anpd_get_font_name($font);
+				if ( $i == 0 && $font_family == $selected_font) {
+					return $key_group;
+					$i++;
+				}
+			}
+		}
+	}
+
+	private function anpd_get_font_name($value){
+		$font_NU = urldecode($value);
+		$font_expload = explode("_x_",$font_NU);
+		global $font_slug,$font_family;
+		for ($x=0; $x < count($font_expload) ; $x++) { 
+			if ($x==0) {
+				$font_family = $font_expload[$x];
+			}elseif ($x==1) {
+				$font_slug = $font_expload[$x];
+			}
+		}
+		return $font_family;
+	}
+
+	private function get_configrator_font_group_prams($anpd_configrator,$anpd_group){
+		$groups = get_post_meta( $anpd_configrator, 'anpd_font_group', true );
+		foreach ($groups as $key_group => $group) {
+			if ($key_group == $anpd_group) {
+				return $group['prams'];
+			}
+		}
+	}
+
+	private function get_configrator_font_size($anpd_configrator,$anpd_group,$anpd_size){
+		$groups = get_post_meta( $anpd_configrator, 'anpd_font_group', true );
+		foreach ($groups as $key_group => $group) {
+			if ($key_group == $anpd_group) {
+				foreach ($group['prams'] as $key => $size) {
+					if ($key == $anpd_size) {
+						return $size;
+					}
+				}
+			}
+		}
 	}
 
 }

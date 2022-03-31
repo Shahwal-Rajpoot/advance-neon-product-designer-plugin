@@ -29,9 +29,7 @@ foreach ($fonts as $font) {
 		);
 	}
 }
-$new_sizes =array_unique($new_sizes);
-// echo '<pre>';
-// print_r(array_unique($new_sizes));
+$new_sizes = array_unique($new_sizes);
 //For 1st location check
 if (!empty($backgrounds)) {
 	$start_bg = wp_get_attachment_image_src($backgrounds[0]['backgrounds_img'], 'full');
@@ -259,7 +257,7 @@ if (!empty($colors)) {
 									$replace = str_replace('_', ' ', $size);
 								?>
 									<label class="anpd-size-label <?php _e($highlight_size,'advance-neon-product-designer'); ?>">
-										<input type="radio" name="size" value="<?php _e($replace,'advance-neon-product-designer'); ?>" <?php _e($checked,'advance-neon-product-designer'); ?>>
+										<input type="radio" name="size" value="<?php _e($size,'advance-neon-product-designer'); ?>" <?php _e($checked,'advance-neon-product-designer'); ?>>
 										<div class="option-one"></div>
 										<?php _e($replace, 'advance-neon-product-designer'); ?>
 									</label>

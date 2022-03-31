@@ -196,6 +196,8 @@ class ANPD {
 		$this->loader->add_action( 'wp_enqueue_scripts', $plugin_public, 'anpd_enqueue_styles' );
 		$this->loader->add_action( 'wp_enqueue_scripts', $plugin_public, 'anpd_enqueue_scripts' );
 		$this->loader->add_action('woocommerce_before_single_product', $plugin_public,'ANPD_Custom_product_template');
+		$this->loader->add_action('wp_ajax_anpd_price_cacl', $plugin_public, 'ajax_anpd_price_cacl');
+		$this->loader->add_action('wp_ajax_nopriv_anpd_price_cacl', $plugin_public, 'ajax_anpd_price_cacl');
 		$plugin_public->ANPD_remove_hooks_product_page();
 
 	}

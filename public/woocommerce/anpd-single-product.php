@@ -82,7 +82,7 @@ if (!empty($colors)) {
 			<div class="editor_text" id="anpd_text_editor" style="color:var(--anpd9987);text-shadow:0 0 10px var(--anpd9987),0 0 21px var(--anpd9987),0 0 42px var(--anpd9987),0 0 62px var(--anpd9987),0 0 4px #fff"></div>
 		</div>
 		<div class="anpd-col-options anpd-col-4">
-			<form method="post" action="">
+			<form method="post" action="" id="Anpd_product_form">
 				<div class="anpd-height-fixed">
 					<div class="anpd-option-card">
 						<div class="col-anpd-label">
@@ -128,7 +128,7 @@ if (!empty($colors)) {
 									$image_attributes = wp_get_attachment_image_src($background['backgrounds_img'], 'full');
 								?>
 								<label class="anpd-container-checkmark">
-								  <input type="radio" name="anpd-bg" value="<?php echo esc_attr($image_attributes[0]); ?>" <?php _e($checked,'advance-neon-product-designer'); ?>>
+								  <input type="radio" name="anpd-bg" value="<?php echo $background['backgrounds_img']; ?>" <?php _e($checked,'advance-neon-product-designer'); ?>>
 								  <span class="anpd-checkmark"><img src="<?php echo esc_attr($image_attributes[0]); ?>" ></span>
 								</label>
 								<?php 
@@ -300,8 +300,34 @@ if (!empty($colors)) {
 						</div>
 					</div>
 				</div>
+				<input type="hidden" name="config_id" value="<?php echo $configrator; ?>">
+				<input type="hidden" name="action" value="anpd_price_cacl">
 				<input type="submit" name="submit" value="DONE" class="anpd-product-submit">
 			</form>
 		</div>
 	</div>
 </div>
+<script type="text/javascript">
+	//form submit create invoice
+	jQuery(function() {
+	  	jQuery('#Anpd_product_form').on('submit',function(e){
+	    	e.preventDefault();
+	    	submitForm();
+	  	});
+	});
+	// ajax invoice creation
+	function submitForm(){
+	    var link = "<?php echo admin_url('admin-ajax.php');?>";
+		jQuery.ajax({
+			type:'POST',
+			url:link,
+			data: new FormData(jQuery('#Anpd_product_form').get(0)),
+			cache: false,
+			contentType: false,
+   			processData:false,   
+			success:function(result){
+				console.log(result)
+			}
+		});
+	}
+</script>

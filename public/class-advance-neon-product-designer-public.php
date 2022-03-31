@@ -133,5 +133,9 @@ class ANPD_Public {
 			}
         }
 	}
+	Public function ajax_anpd_price_cacl(){
+		$alignment = $_POST['alignment'];
+			wp_send_json_success($_POST);
+	}
 
 }

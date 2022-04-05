@@ -78,7 +78,7 @@ if (!empty($colors)) {
 			  <span class="anpd-slider anpd-round"></span>
 			</label> -->
 			<div class="editor_text" id="anpd_text_editor" style="color:var(--anpd9987);text-shadow:0 0 10px var(--anpd9987),0 0 21px var(--anpd9987),0 0 42px var(--anpd9987),0 0 62px var(--anpd9987),0 0 4px #fff"></div>
-			<p class="anpd_price"></p>
+			<p class="anpd_price"><span class="anpd-price-span"></span></p>
 		</div>
 		<div class="anpd-col-options anpd-col-4">
 			<form method="post" action="" id="Anpd_product_form">
@@ -321,9 +321,12 @@ if (!empty($colors)) {
 	  		submitForm();
 	  	});
 	  	jQuery('#anpd_text').keyup(function() {
+	  		jQuery('#unique-selector').remove();
 	  		submitForm();
+
 		});
 		jQuery('input[name=location],input[name=font],input[name=size],input[name=backing]').change(function() {
+			jQuery('#unique-selector').remove();
 		    submitForm();
 	  	});
 	});
@@ -340,7 +343,11 @@ if (!empty($colors)) {
 			success:function(result){
 				console.log(result)
 				if (result.data !== '') {
-					jQuery('.anpd_price').html(result.data);
+					jQuery('.anpd-price-span').html(result.data['price']);
+					if (result.data['redirect'] == 1) {
+						window.location = "checkout";
+					}
+					
 				}
 			}
 		});

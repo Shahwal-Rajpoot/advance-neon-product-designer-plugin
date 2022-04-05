@@ -212,21 +212,22 @@ class ANPD_Public {
 		$get_location        = $this->get_price_exploded_arr('location',$selected_location);
 		$location_price      = $get_location[0]['location_price'];
 		$location_title      = $get_location[0]['location'];
-		$backing_price       = $get_location[0]['backing_price'];
-		$backing_title       = $get_location[0]['backing'];
-		$Z 					 = (int)$get_font_size_prams['z'];
-		$Y 					 = (int)$get_font_size_prams['y'];
-		$M 					 = (int)$get_font_size_prams['m']/100;
-		$R 					 = (int)$get_font_size_prams['r'];
-		$X 					 = (int)$get_font_size_prams['x'];
-		$W 					 = (int)$get_font_size_prams['w'];
-		$H 					 = (int)$get_font_size_prams['h'];
-		$K 					 = (int)$get_font_size_prams['k'];
-		$P 					 = (int)$get_font_size_prams['p'];
+		$backing_price       = $get_backing[0]['backing_price'];
+		$backing_title       = $get_backing[0]['backing'];
+		$z 					 = (float)$get_font_size_prams['z'];
+		$y 					 = (float)$get_font_size_prams['y'];
+		$m 					 = (float)$get_font_size_prams['m']/100;
+		$r 					 = (float)$get_font_size_prams['r'];
+		$x 					 = (float)$get_font_size_prams['x'];
+		$w 					 = (float)$get_font_size_prams['w'];
+		$h 					 = (float)$get_font_size_prams['h'];
+		$k 					 = (float)$get_font_size_prams['k'];
+		$p 					 = (float)$get_font_size_prams['p'];
 		$n                   = strlen($anpd_text);
-		$calculated_price    = $this->price_formula($n,$X,$Z,$Y,$W,$H,$R,$M,$K,$P);
-
+		$calculated_price    = $this->price_formula($n,$z,$y,$m,$r,$x,$w,$h,$k,$p);
+		// $calculated_price 	 = $calculated_price+$location_price+$backing_price;
 		// add to cart product
+		// $arr = [$n,$z,$y,$m,$r,$x,$w,$h,$k,$p];
 		$cart_meta = array(
 			'anpd_font' => $selected_font,
 			'anpd_location' => $location_title,
@@ -241,19 +242,26 @@ class ANPD_Public {
 		if (isset($_POST['submitted'])) {
 			WC()->cart->empty_cart();
 			WC()->cart->add_to_cart( $product_id, 1, 0 , array() , $cart_meta );
+			$arr = array(
+				'redirect' => 1,
+				'price' => wc_price($calculated_price),
+			);
+		}else{
+			$arr = array(
+				'redirect' => 0,
+				'price' => wc_price($calculated_price),
+			);
 		}
-		wp_send_json_success(wc_price($calculated_price));
+		wp_send_json_success($arr);
 	}
 
+	private function anpd_ceiling($number, $significance = 1){
+        return ( is_numeric($number) && is_numeric($significance) ) ? (ceil($number/$significance)*$significance) : false;
+    }
 
-	private function price_formula($n,$x,$z,$y,$w,$h,$r,$m,$k,$p){
-			// $price = round(($n*$x+$z+$y*((ceil(($n*$w+15)*($h+15)*8/5000,0.5))-0.5)/0.5)/($r*(1-$m*(pow(($p-$n)/$p,$k)))));
-			// $first_price = $n*$x+$z+$y;
-			// $sec_price = (ceil(($n*$w+15)*($h+15)*8/5000)-0.5)/0.5;
-			// $power = ($p-$n)/$p;
-			// $third_price = $r*(1-$m*(pow($power,$k)));
-			// $price = ($first_price*$sec_price)/$third_price;
-			return 215;
+	private function price_formula($n,$z,$y,$m,$r,$x,$w,$h,$k,$p){
+			$price = round(($n*$x+$z+$y*(($this->anpd_ceiling(($n*$w+15)*($h+15)*8/5000,0.5))-0.5)/0.5)/($r*(1-$m*(pow(($p-$n)/$p,$k)))));
+			return $price;
 	}
 
 	/**

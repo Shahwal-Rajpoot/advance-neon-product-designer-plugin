@@ -121,8 +121,9 @@ if ( $anpd_font_group ){
 					$i = 0;
 					foreach ($field['prams'] as $key_size_label => $sizes_pram) {
 							if ($i == 0) { 
-								foreach ($sizes_pram as $key => $value) { ?>
-									<th><?php echo $key; ?></th>
+								foreach ($sizes_pram as $key => $value) { 
+									if ($key == 'm') {$per = '%';}else{$per = '';}?>
+									<th><?php echo $key.' '.$per; ?></th>
 							<?php 
 								}
 							}

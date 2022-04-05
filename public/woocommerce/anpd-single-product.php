@@ -73,11 +73,12 @@ if (!empty($colors)) {
 	<h1 style="text-align: center;font-size: 30px;"><?php echo the_title(); ?></h1>
 	<div class="anpd-row">
 		<div class="anpd-editor anpd-col-8" style="--anpd9987:<?php echo $first_colors; ?>;background-image: linear-gradient(0deg, rgb(57, 57, 57) 0%, rgb(0 0 0 / 23%) 35%),url(<?php echo $attr_bg;  ?>)">
-			<label class="anpd-switch">
+			<!-- <label class="anpd-switch">
 			  <input type="checkbox" checked id="shadow_on_off">
 			  <span class="anpd-slider anpd-round"></span>
-			</label>
+			</label> -->
 			<div class="editor_text" id="anpd_text_editor" style="color:var(--anpd9987);text-shadow:0 0 10px var(--anpd9987),0 0 21px var(--anpd9987),0 0 42px var(--anpd9987),0 0 62px var(--anpd9987),0 0 4px #fff"></div>
+			<p class="anpd_price"></p>
 		</div>
 		<div class="anpd-col-options anpd-col-4">
 			<form method="post" action="" id="Anpd_product_form">
@@ -102,7 +103,7 @@ if (!empty($colors)) {
 									if($i == 0) { $checked = "checked"; $highlight_loc = "anpd-loc-highlight";}else {$checked = '';$highlight_loc = '';}
 								?>
 								<label class="anpd-container-checkmark anpd-loc-label <?php _e($highlight_loc,'advance-neon-product-designer'); ?>">
-								  <input type="radio" name="location" value="<?php  _e($location['location_title'], 'advance-neon-product-designer'); ?>" <?php _e($checked,'advance-neon-product-designer'); ?>>
+								  <input type="radio" name="location" value="<?php  _e($location['location_price'].'_x_'.$location['location_title'], 'advance-neon-product-designer'); ?>" <?php _e($checked,'advance-neon-product-designer'); ?>>
 								  <span class="anpd-checkmark"></span><?php _e($location['location_title'], 'advance-neon-product-designer'); ?>
 								</label>
 								<?php 
@@ -126,7 +127,7 @@ if (!empty($colors)) {
 									$image_attributes = wp_get_attachment_image_src($background['backgrounds_img'], 'full');
 								?>
 								<label class="anpd-container-checkmark">
-								  <input type="radio" name="anpd-bg" value="<?php echo $background['backgrounds_img']; ?>" <?php _e($checked,'advance-neon-product-designer'); ?>>
+								  <input type="radio" name="anpd-bg" value="<?php echo esc_attr($image_attributes[0]); ?>" <?php _e($checked,'advance-neon-product-designer'); ?>>
 								  <span class="anpd-checkmark"><img src="<?php echo esc_attr($image_attributes[0]); ?>" ></span>
 								</label>
 								<?php 
@@ -283,7 +284,7 @@ if (!empty($colors)) {
 									?>
 									<div class="anpd-col-6">
 										<label class="anpd-backing-label <?php _e($highlight_backing,'advance-neon-product-designer'); ?>">
-											<input type="radio" name="backing" value="<?php _e($backing['backing_title'],'advance-neon-product-designer'); ?>" <?php _e($checked,'advance-neon-product-designer'); ?>>
+											<input type="radio" name="backing" value="<?php _e($backing['backing_price'].'_x_'.$backing['backing_title'],'advance-neon-product-designer'); ?>" <?php _e($checked,'advance-neon-product-designer'); ?>>
 											<div class="option-one"></div>
 											<?php _e($backing['backing_title'], 'advance-neon-product-designer'); ?>
 										</label>
@@ -299,6 +300,7 @@ if (!empty($colors)) {
 					</div>
 				</div>
 				<input type="hidden" name="config_id" value="<?php echo $configrator; ?>">
+				<input type="hidden" name="product_id" value="<?php echo $post->ID; ?>">
 				<input type="hidden" name="action" value="anpd_price_cacl">
 				<input type="submit" name="submit" value="DONE" class="anpd-product-submit">
 			</form>
@@ -306,14 +308,26 @@ if (!empty($colors)) {
 	</div>
 </div>
 <script type="text/javascript">
-	//form submit create invoice
+	//form submit 
 	jQuery(function() {
 	  	jQuery('#Anpd_product_form').on('submit',function(e){
+	  		if (jQuery('#unique-selector').length === 0) {
+			    jQuery('form').append('<input type="hidden" name="submitted" value="true" id="unique-selector">');
+			}
 	    	e.preventDefault();
 	    	submitForm();
 	  	});
+	  	jQuery(document).ready(function() {
+	  		submitForm();
+	  	});
+	  	jQuery('#anpd_text').keyup(function() {
+	  		submitForm();
+		});
+		jQuery('input[name=location],input[name=font],input[name=size],input[name=backing]').change(function() {
+		    submitForm();
+	  	});
 	});
-	// ajax invoice creation
+	// ajax 
 	function submitForm(){
 	    var link = "<?php echo admin_url('admin-ajax.php');?>";
 		jQuery.ajax({
@@ -325,6 +339,9 @@ if (!empty($colors)) {
    			processData:false,   
 			success:function(result){
 				console.log(result)
+				if (result.data !== '') {
+					jQuery('.anpd_price').html(result.data);
+				}
 			}
 		});
 	}

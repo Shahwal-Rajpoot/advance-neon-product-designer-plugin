@@ -47,11 +47,47 @@ class ANPD_Public {
 	 * @param      string    $plugin_name       The name of the plugin.
 	 * @param      string    $version    The version of this plugin.
 	 */
+	public $cart_items_labels = array(
+		"anpd_font" => 'Font',
+		"anpd_location" => 'Location',
+		"anpd_text" => 'Text',
+		"anpd_size" => 'Size',
+		"anpd_color" => 'Color',
+		"anpd_alignment" => 'Alignment',
+		"anpd_tube" => 'Tube',
+		"anpd_backing" => 'Backing',
+	);
 	public function __construct( $plugin_name, $version ) {
 
 		$this->plugin_name = $plugin_name;
 		$this->version = $version;
+		add_filter( 'woocommerce_get_item_data', array($this,'anpd_display_engraving_text_cart'), 10, 2 );
+		add_action( 'woocommerce_before_calculate_totals', array($this,'add_custom_price') );
 
+	}
+
+	
+
+	public	function add_custom_price( $cart_object ) {
+		    foreach ( $cart_object->cart_contents as $key => $value ) {
+		    	if (array_key_exists('anpd_price', $value ) && $value['anpd_price']) {
+		    		$value['data']->set_price($value['anpd_price']) ;
+		    	}
+		    }
+		}
+	public function anpd_display_engraving_text_cart( $item_data, $cart_item ) {
+		foreach ($this->cart_items_labels as $key => $value) {
+			if ( empty( $cart_item[$key] ) ) {
+				return $item_data;
+			}
+			$item_data[] = array(
+				'key'     => __($value, 'advance-neon-product-designer'),
+				'value'   => wc_clean( $cart_item[$key] ),
+				'display' => '',
+			);
+			
+		}
+		return $item_data;
 	}
 
 	/**
@@ -102,6 +138,12 @@ class ANPD_Public {
 
 	}
 
+
+	/**
+	 * Register Custom Template For ANPD Products
+	 *
+	 * @since    1.0.0
+	 */
 	public function ANPD_Custom_product_template( $data ) {
     	global $product , $post;
         $configrator = get_post_meta( $post->ID, 'anpd_config_selector', true );
@@ -111,6 +153,12 @@ class ANPD_Public {
 	  return $data;
 	}
 
+
+	/**
+	 * Remove woocommerce hooks For ANPD Products
+	 *
+	 * @since    1.0.0
+	 */
 	public function ANPD_remove_hooks_product_page(){
 		global $product , $post;
         if(is_singular('product')) {
@@ -134,8 +182,16 @@ class ANPD_Public {
         }
 	}
 
+
+	/**
+	 * Ajax Price Calculation
+	 *
+	 * @since    1.0.0
+	 */
 	Public function ajax_anpd_price_cacl(){
-		global $post;
+		global $post, $product;
+		// Form submitted data
+		$product_id 		 = $_POST['product_id'];
 		$anpd_configrator    = $_POST['config_id'];
 		$selected_font       = $_POST['font'];
 		$anpd_size           = $_POST['size'];
@@ -146,13 +202,65 @@ class ANPD_Public {
 		$anpd_tube           = $_POST['tube'];
 		$selected_backing    = $_POST['backing'];
 		$anpd_text           = $_POST['anpd_text'];
+		
+		// data for price Calculation
 		$conf_data           = $this->get_configrator_data($anpd_configrator);
 		$get_font_group      = $this->get_configrator_font_group($anpd_configrator,$selected_font);
 		$get_font_prams      = $this->get_configrator_font_group_prams($anpd_configrator,$get_font_group);
 		$get_font_size_prams = $this->get_configrator_font_size($anpd_configrator,$get_font_group,$anpd_size);
-		wp_send_json_success($get_font_size_prams);
+		$get_backing         = $this->get_price_exploded_arr('backing',$selected_backing);
+		$get_location        = $this->get_price_exploded_arr('location',$selected_location);
+		$location_price      = $get_location[0]['location_price'];
+		$location_title      = $get_location[0]['location'];
+		$backing_price       = $get_location[0]['backing_price'];
+		$backing_title       = $get_location[0]['backing'];
+		$Z 					 = (int)$get_font_size_prams['z'];
+		$Y 					 = (int)$get_font_size_prams['y'];
+		$M 					 = (int)$get_font_size_prams['m']/100;
+		$R 					 = (int)$get_font_size_prams['r'];
+		$X 					 = (int)$get_font_size_prams['x'];
+		$W 					 = (int)$get_font_size_prams['w'];
+		$H 					 = (int)$get_font_size_prams['h'];
+		$K 					 = (int)$get_font_size_prams['k'];
+		$P 					 = (int)$get_font_size_prams['p'];
+		$n                   = strlen($anpd_text);
+		$calculated_price    = $this->price_formula($n,$X,$Z,$Y,$W,$H,$R,$M,$K,$P);
+
+		// add to cart product
+		$cart_meta = array(
+			'anpd_font' => $selected_font,
+			'anpd_location' => $location_title,
+			'anpd_text' => $anpd_text,
+			'anpd_size' => str_replace('_', ' ', $anpd_size),
+			'anpd_color' => $selected_color,
+			'anpd_alignment' => $alignment,
+			'anpd_tube' => $anpd_tube,
+			'anpd_backing' => $backing_title ,
+			'anpd_price' => $calculated_price,
+		);
+		if (isset($_POST['submitted'])) {
+			WC()->cart->empty_cart();
+			WC()->cart->add_to_cart( $product_id, 1, 0 , array() , $cart_meta );
+		}
+		wp_send_json_success(wc_price($calculated_price));
 	}
 
+
+	private function price_formula($n,$x,$z,$y,$w,$h,$r,$m,$k,$p){
+			// $price = round(($n*$x+$z+$y*((ceil(($n*$w+15)*($h+15)*8/5000,0.5))-0.5)/0.5)/($r*(1-$m*(pow(($p-$n)/$p,$k)))));
+			// $first_price = $n*$x+$z+$y;
+			// $sec_price = (ceil(($n*$w+15)*($h+15)*8/5000)-0.5)/0.5;
+			// $power = ($p-$n)/$p;
+			// $third_price = $r*(1-$m*(pow($power,$k)));
+			// $price = ($first_price*$sec_price)/$third_price;
+			return 215;
+	}
+
+	/**
+	 * Get configrator data by configrator ID
+	 *
+	 * @since    1.0.0
+	 */
 	private function get_configrator_data($anpd_configrator){
 		$colors      = get_post_meta( $anpd_configrator, 'anpd_color_group', true );
 		$backings    = get_post_meta( $anpd_configrator, 'anpd_backing_group', true );
@@ -169,6 +277,12 @@ class ANPD_Public {
 		return $conf_data;
 	}
 
+
+	/**
+	 * Get Configrator Font Group by Configrator ID and Font
+	 *
+	 * @since    1.0.0
+	 */
 	private function get_configrator_font_group($anpd_configrator,$selected_font){
 		global $font_slug;
 		$groups       = get_post_meta( $anpd_configrator, 'anpd_font_group', true );
@@ -184,6 +298,11 @@ class ANPD_Public {
 		}
 	}
 
+	/**
+	 * Get Font Name
+	 *
+	 * @since    1.0.0
+	 */
 	private function anpd_get_font_name($value){
 		$font_NU = urldecode($value);
 		$font_expload = explode("_x_",$font_NU);
@@ -198,6 +317,11 @@ class ANPD_Public {
 		return $font_family;
 	}
 
+	/**
+	 * Get Configrator Font Group Parameters by Configrator ID and Group
+	 *
+	 * @since    1.0.0
+	 */
 	private function get_configrator_font_group_prams($anpd_configrator,$anpd_group){
 		$groups = get_post_meta( $anpd_configrator, 'anpd_font_group', true );
 		foreach ($groups as $key_group => $group) {
@@ -207,6 +331,11 @@ class ANPD_Public {
 		}
 	}
 
+	/**
+	 * Get Configrator Font 
+	 *
+	 * @since    1.0.0
+	 */
 	private function get_configrator_font_size($anpd_configrator,$anpd_group,$anpd_size){
 		$groups = get_post_meta( $anpd_configrator, 'anpd_font_group', true );
 		foreach ($groups as $key_group => $group) {
@@ -218,6 +347,21 @@ class ANPD_Public {
 				}
 			}
 		}
+	}
+	private function get_price_exploded_arr($name,$value){
+		$value_expload = explode("_x_",$value);
+		for ($x=0; $x < count($value_expload) ; $x++) { 
+			if ($x==0) {
+				$price = $value_expload[$x];
+			}elseif ($x==1) {
+				$name_ex = $value_expload[$x];
+			}
+		}
+		$arr[] = array(
+			$name => $name_ex,
+			$name.'_price' =>  $price
+		);
+		return $arr;
 	}
 
 }

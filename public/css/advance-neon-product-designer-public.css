@@ -2,7 +2,16 @@
  * All of the CSS for your public-facing functionality should be
  * included in this file.
  */
-
+.anpd_price{
+    font-size: 30px;
+    font-weight: 500;
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    margin: 0px;
+    line-height: 30px;
+    color: #000;
+}
 textarea#anpd_text {
   max-width: 100%; 
   max-height: 100%;

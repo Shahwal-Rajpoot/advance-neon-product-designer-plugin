@@ -13,7 +13,7 @@
  * @package           ANPD
  *
  * @wordpress-plugin
- * Plugin Name:       Advance Neon Product Designer
+ * Plugin Name:       Advance Neon Product Designer For WooCommerce
  * Plugin URI:        http://example.com/advance-neon-product-designer-uri/
  * Description:       This is a short description of what the plugin does. It's displayed in the WordPress admin area.
  * Version:           1.0.0

@@ -107,8 +107,4 @@
 		jQuery('#anpd_text_editor').html(message);
   	});
   	jQuery( "#anpd_text_editor" ).draggable();
-
-
-
-  	
 })( jQuery );

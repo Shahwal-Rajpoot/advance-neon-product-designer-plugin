@@ -377,8 +377,64 @@ class ANPD_Admin {
 	 *
 	 * @since    1.0.0
 	 */
+	public function anpd_logo_button_meta_boxes(){
+		$this->anpd_add_repeter_meta_boxes('anpd-configurator','anpd-logo-btn-data','Logo Button Setings','anpd_logo_button_meta_box_callback');
+	}
+
+	/**
+	 * meta box callback function for backing
+	 *
+	 * @since    1.0.0
+	 */
+	public function anpd_logo_button_meta_box_callback($post) {
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/partials/anpd-logo-btn-settings.php';
+	}
+
+	/**
+	 * Add backing meta box to post
+	 *
+	 * @since    1.0.0
+	 */
 	public function anpd_backing_repeter_meta_boxes(){
 		$this->anpd_add_repeter_meta_boxes('anpd-configurator','anpd-backing-repeter-data','ANPD Backing','anpd_backing_meta_box_callback');
+	}
+
+	/**
+	 * Save backing Meta Box values
+	 *
+	 * @since    1.0.0
+	 */
+	public function anpd_logo_button_meta_box_save($post_id) {
+		global $post;
+		if (!isset($_POST['anpd-logo_buttons']) || !wp_verify_nonce($_POST['anpd-logo_buttons'], 'repeterBox-logo_buttons'))
+			return;
+
+		if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE)
+			return;
+
+		if (!current_user_can('edit_post', $post_id))
+			return;
+
+		$old = get_post_meta($post_id, 'anpd_logo_button_group', true);
+
+		$new = array();
+		$titles = $_POST['logo_button_title'];
+		$url = $_POST['logo_button_URL'];
+		$count = count( $titles );
+		for ( $i = 0; $i < $count; $i++ ) {
+			if ( $titles[$i] != '' ) {
+				$new[$i]['logo_button_title'] = stripslashes( strip_tags( $titles[$i] ) );
+				$new[$i]['logo_button_URL'] = stripslashes( $url[$i] );
+			}
+		}
+
+		if ( !empty( $new ) && $new != $old ){
+			update_post_meta( $post_id, 'anpd_logo_button_group', $new );
+		} elseif ( empty($new) && $old ) {
+			delete_post_meta( $post_id, 'anpd_logo_button_group', $old );
+		}
+		$anpd_logo_button= $_REQUEST['anpd_logo_button'];
+		update_post_meta( $post_id, 'anpd_logo_button', $anpd_logo_button );
 	}
 
 	/**

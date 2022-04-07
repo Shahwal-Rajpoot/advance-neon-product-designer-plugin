@@ -141,7 +141,7 @@ if ( $anpd_font_group ){
 							<?php foreach ($sizes_pram as $key => $value) { 
 								?>
 								<td>
-									<input type="text" name="groupdata<?php echo '['.$sizes_group_key.'][prams]'.'['.$key_size_label.']['.$key.']'; ?>" min="0" step="0.01" placeholder="<?php //echo $key; ?>" value="<?php echo $value; ?>">
+									<input type="number" name="groupdata<?php echo '['.$sizes_group_key.'][prams]'.'['.$key_size_label.']['.$key.']'; ?>" min="0" step="0.00001" placeholder="<?php //echo $key; ?>" value="<?php echo $value; ?>">
 								</td>
 							<?php } ?>
 						</tr>
@@ -199,8 +199,9 @@ if ( $anpd_font_group ){
 			<thead>
 				<tr>
 					<th>Label</th>
-					<?php foreach ($sizes_prams as $key => $sizes_pram) { ?>
-						<th><?php echo $key; ?></th>
+					<?php foreach ($sizes_prams as $key => $sizes_pram) { 
+						if ($key == 'm') {$per = '%';}else{$per = '';}?>
+						<th><?php echo $key.' '.$per; ?></th>
 					<?php } ?>
 				</tr>
 			</thead>
@@ -213,7 +214,7 @@ if ( $anpd_font_group ){
 							<?php foreach ($value['prams'] as $key => $pram) { 
 								?>
 								<td>
-									<input type="text" name="groupdata<?php echo '['.$sizes_group_key.'][prams]'.'['.$key_size_label.']['.$key.']'; ?>" min="0" step="0.01" placeholder="<?php echo $key; ?>">
+									<input type="number" name="groupdata<?php echo '['.$sizes_group_key.'][prams]'.'['.$key_size_label.']['.$key.']'; ?>" min="0" step="0.00001" placeholder="<?php echo $key; ?>">
 								</td>
 							<?php } ?>
 						</tr>

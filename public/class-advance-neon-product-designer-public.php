@@ -210,9 +210,9 @@ class ANPD_Public {
 		$get_font_size_prams = $this->get_configrator_font_size($anpd_configrator,$get_font_group,$anpd_size);
 		$get_backing         = $this->get_price_exploded_arr('backing',$selected_backing);
 		$get_location        = $this->get_price_exploded_arr('location',$selected_location);
-		$location_price      = $get_location[0]['location_price'];
+		$location_price      = (float)$get_location[0]['location_price'];
 		$location_title      = $get_location[0]['location'];
-		$backing_price       = $get_backing[0]['backing_price'];
+		$backing_price       = (float)$get_backing[0]['backing_price'];
 		$backing_title       = $get_backing[0]['backing'];
 		$z 					 = (float)$get_font_size_prams['z'];
 		$y 					 = (float)$get_font_size_prams['y'];
@@ -225,7 +225,7 @@ class ANPD_Public {
 		$p 					 = (float)$get_font_size_prams['p'];
 		$n                   = strlen($anpd_text);
 		$calculated_price    = $this->price_formula($n,$z,$y,$m,$r,$x,$w,$h,$k,$p);
-		// $calculated_price 	 = $calculated_price+$location_price+$backing_price;
+		$calculated_price_total 	 = $calculated_price+$location_price+$backing_price;
 		// add to cart product
 		// $arr = [$n,$z,$y,$m,$r,$x,$w,$h,$k,$p];
 		$cart_meta = array(
@@ -244,12 +244,12 @@ class ANPD_Public {
 			WC()->cart->add_to_cart( $product_id, 1, 0 , array() , $cart_meta );
 			$arr = array(
 				'redirect' => 1,
-				'price' => wc_price($calculated_price),
+				'price' => wc_price($calculated_price_total),
 			);
 		}else{
 			$arr = array(
 				'redirect' => 0,
-				'price' => wc_price($calculated_price),
+				'price' => wc_price($calculated_price_total),
 			);
 		}
 		wp_send_json_success($arr);

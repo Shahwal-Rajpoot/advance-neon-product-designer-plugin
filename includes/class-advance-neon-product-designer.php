@@ -170,6 +170,9 @@ class ANPD {
 		$this->loader->add_action( 'admin_init', $plugin_admin, 'anpd_backing_repeter_meta_boxes' );
 		$this->loader->add_action( 'save_post', $plugin_admin, 'anpd_backing_meta_box_save', 1 );
 
+		$this->loader->add_action( 'admin_init', $plugin_admin, 'anpd_logo_button_meta_boxes' );
+		$this->loader->add_action( 'save_post', $plugin_admin, 'anpd_logo_button_meta_box_save', 1 );
+
 		$this->loader->add_action( 'admin_init', $plugin_admin, 'anpd_font_repeter_meta_boxes' );
 		$this->loader->add_action( 'save_post', $plugin_admin, 'anpd_font_meta_box_save', 1 );
 

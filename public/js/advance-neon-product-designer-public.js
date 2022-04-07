@@ -87,11 +87,11 @@
 	    
   	});
 
-  	var shadow = jQuery('#anpd_text_editor').css('text-shadow');
+  	// var shadow = jQuery('#anpd_text_editor').css('text-shadow');
   	jQuery('#shadow_on_off').change(function(){
   		jQuery('input[name=color]')
 	    if (jQuery(this).is(':checked')) {
-	    	jQuery('#anpd_text_editor').css('text-shadow',shadow);
+	    	jQuery('#anpd_text_editor').css('text-shadow','0 0 10px var(--anpd9987),0 0 21px var(--anpd9987),0 0 42px var(--anpd9987),0 0 62px var(--anpd9987),0 0 4px #fff');
 	    }else{
 	    	jQuery('#anpd_text_editor').css('text-shadow','none');
 	    }
@@ -99,7 +99,22 @@
 
   	jQuery('#anpd_text').keyup(function() {
   		var message = jQuery('#anpd_text').val().replace(/\r\n|\r|\n/g,"<br />");
+  		var length = jQuery(this).val().length
   		jQuery('#anpd_text_editor').html(message);
+  		var parent_width = jQuery('.anpd-editor').width();
+  		var parent_lower_limit = parent_width*0.8;
+  		var child_width = jQuery('#anpd_text_editor').width();
+  		var font_size = jQuery('#anpd_text_editor').css('font-size');
+		var replace_px = font_size.replace('px','');
+		var new_font_size = replace_px*0.9;
+  		if (child_width > parent_lower_limit) {
+  			if (new_font_size > 10) {
+  				jQuery('#anpd_text_editor').css('font-size',new_font_size+'px');
+  			}
+  		}
+  		if (new_font_size < 80 && length < 10) {
+			jQuery('#anpd_text_editor').css('font-size','80px');
+  		}
 	});
 
   	jQuery(document).ready(function(){

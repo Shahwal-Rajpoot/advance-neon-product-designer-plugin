@@ -73,10 +73,10 @@ if (!empty($colors)) {
 	<h1 style="text-align: center;font-size: 30px;"><?php echo the_title(); ?></h1>
 	<div class="anpd-row">
 		<div class="anpd-editor anpd-col-8" style="--anpd9987:<?php echo $first_colors; ?>;background-image: linear-gradient(0deg, rgb(57, 57, 57) 0%, rgb(0 0 0 / 23%) 35%),url(<?php echo $attr_bg;  ?>)">
-			<!-- <label class="anpd-switch">
+			<label class="anpd-switch">
 			  <input type="checkbox" checked id="shadow_on_off">
 			  <span class="anpd-slider anpd-round"></span>
-			</label> -->
+			</label>
 			<div class="editor_text" id="anpd_text_editor" style="color:var(--anpd9987);text-shadow:0 0 10px var(--anpd9987),0 0 21px var(--anpd9987),0 0 42px var(--anpd9987),0 0 62px var(--anpd9987),0 0 4px #fff"></div>
 			<p class="anpd_price"><span class="anpd-price-span"></span></p>
 		</div>
@@ -283,8 +283,8 @@ if (!empty($colors)) {
 										if($i == 0) { $checked = "checked"; $highlight_backing = "anpd-backing-highlight";}else {$checked = '';$highlight_backing = '';}
 									?>
 									<div class="anpd-col-6">
-										<label class="anpd-backing-label <?php _e($highlight_backing,'advance-neon-product-designer'); ?>">
-											<input type="radio" name="backing" value="<?php _e($backing['backing_price'].'_x_'.$backing['backing_title'],'advance-neon-product-designer'); ?>" <?php _e($checked,'advance-neon-product-designer'); ?>>
+										<label class="anpd-backing-label <?php //_e($highlight_backing,'advance-neon-product-designer'); ?>">
+											<input type="radio" name="backing" value="<?php _e($backing['backing_price'].'_x_'.$backing['backing_title'],'advance-neon-product-designer'); ?>" <?php //_e($checked,'advance-neon-product-designer'); ?>>
 											<div class="option-one"></div>
 											<?php _e($backing['backing_title'], 'advance-neon-product-designer'); ?>
 										</label>

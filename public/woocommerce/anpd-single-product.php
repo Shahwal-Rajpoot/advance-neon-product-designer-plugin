@@ -60,13 +60,13 @@ if (!empty($colors)) {
 </style>
 <style type="text/css">
 	div.product,.woocommerce-breadcrumb{
-		display: none;
+		display: none!important;
 	}
 	.woocommerce .wp-site-blocks>.wp-block-group{
-	    max-width: 100%;
+	    max-width: 100%!important;
 	    margin-left: auto;
 	    margin-right: auto;
-	    width: 100%;
+	    width: 100%!important;
 	}
 </style>
 <div class="anpd-container">
